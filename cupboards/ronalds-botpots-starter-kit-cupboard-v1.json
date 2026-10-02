@@ -1,0 +1,251 @@
+{
+  "format": "glazy-cupboard",
+  "version": 1,
+  "name": "Ronald's BOTPOTS Starter Kit",
+  "materials": [
+    {
+      "id": 15072,
+      "name": "Bentonite",
+      "state": "have",
+      "family": "bentonite",
+      "analysis": {
+        "SiO2": 59.3295,
+        "Al2O3": 20.1153,
+        "Na2O": 3.0194,
+        "K2O": 1.0064,
+        "MgO": 2.0096,
+        "CaO": 1.0057,
+        "Fe2O3": 3.514
+      }
+    },
+    {
+      "id": 15080,
+      "name": "Bone Ash",
+      "state": "have",
+      "family": "ordinary",
+      "analysis": {
+        "CaO": 55.8213,
+        "P2O5": 42.3887
+      }
+    },
+    {
+      "id": 87859,
+      "name": "China Clay Ultrafine",
+      "state": "have",
+      "family": "rawClay",
+      "analysis": {
+        "SiO2": 49.4,
+        "Al2O3": 35.4,
+        "Na2O": 0.03,
+        "K2O": 0.01,
+        "MgO": 0.01,
+        "CaO": 0.01,
+        "TiO2": 0.07,
+        "Fe2O3": 0.3
+      }
+    },
+    {
+      "id": 15108,
+      "name": "Chrome Oxide",
+      "state": "have",
+      "family": "addition",
+      "analysis": {
+        "Cr2O3": 100
+      }
+    },
+    {
+      "id": 15114,
+      "name": "Cobalt Carbonate",
+      "state": "have",
+      "family": "addition",
+      "analysis": {
+        "CoO": 63
+      }
+    },
+    {
+      "id": 15120,
+      "name": "Copper Carbonate",
+      "state": "have",
+      "family": "addition",
+      "analysis": {
+        "CuO": 64.38
+      }
+    },
+    {
+      "id": 15135,
+      "name": "Dolomite",
+      "state": "have",
+      "family": "ordinary",
+      "analysis": {
+        "MgO": 21.9081,
+        "CaO": 30.4819
+      }
+    },
+    {
+      "id": 15168,
+      "name": "Ferro Frit 3124",
+      "state": "have",
+      "family": "ordinary",
+      "analysis": {
+        "SiO2": 55.3013,
+        "Al2O3": 9.8977,
+        "B2O3": 13.7671,
+        "Na2O": 6.2839,
+        "K2O": 0.6773,
+        "CaO": 14.0728
+      }
+    },
+    {
+      "id": 15169,
+      "name": "Ferro Frit 3134",
+      "state": "have",
+      "family": "ordinary",
+      "analysis": {
+        "SiO2": 45.56,
+        "Al2O3": 2,
+        "B2O3": 22.79,
+        "Na2O": 10.14,
+        "CaO": 19.51
+      }
+    },
+    {
+      "id": 15336,
+      "name": "Manganese Dioxide",
+      "state": "have",
+      "family": "addition",
+      "analysis": {
+        "MnO2": 86.9
+      }
+    },
+    {
+      "id": 679415,
+      "name": "Nepheline Syenite – DECOPOTS",
+      "state": "have",
+      "family": "ordinary",
+      "analysis": {
+        "SiO2": 59.72,
+        "Al2O3": 21.63,
+        "Na2O": 8.76,
+        "K2O": 4.25,
+        "MgO": 1.26,
+        "CaO": 0.17,
+        "TiO2": 0.03,
+        "Fe2O3": 0.28
+      }
+    },
+    {
+      "id": 371203,
+      "name": "Potash Feldspar Sibelco K200",
+      "state": "have",
+      "family": "ordinary",
+      "analysis": {
+        "SiO2": 66.74,
+        "Al2O3": 18.44,
+        "Na2O": 3.09,
+        "K2O": 11.26,
+        "MgO": 0.2,
+        "CaO": 0.01,
+        "TiO2": 0.01,
+        "Fe2O3": 0.1
+      }
+    },
+    {
+      "id": 15387,
+      "name": "Red Iron Oxide",
+      "state": "have",
+      "family": "addition",
+      "analysis": {
+        "Fe2O3": 95
+      }
+    },
+    {
+      "id": 15393,
+      "name": "Rutile",
+      "state": "have",
+      "family": "addition",
+      "analysis": {
+        "TiO2": 90.0024,
+        "Fe2O3": 9.8976
+      }
+    },
+    {
+      "id": 15400,
+      "name": "Silica",
+      "state": "have",
+      "family": "ordinary",
+      "analysis": {
+        "SiO2": 100
+      }
+    },
+    {
+      "id": 15431,
+      "name": "Strontium Carbonate",
+      "state": "have",
+      "family": "ordinary",
+      "analysis": {
+        "SrO": 70.2
+      }
+    },
+    {
+      "id": 367822,
+      "name": "Talc (Calcined #325, maybe PV45)",
+      "state": "have",
+      "family": "ordinary",
+      "analysis": {
+        "SiO2": 65.16,
+        "Al2O3": 1.89,
+        "Na2O": 0.05,
+        "K2O": 0.03,
+        "MgO": 30.93,
+        "CaO": 0.96,
+        "TiO2": 0.04
+      }
+    },
+    {
+      "id": 15442,
+      "name": "Tin Oxide",
+      "state": "have",
+      "family": "addition",
+      "analysis": {
+        "SnO2": 100
+      }
+    },
+    {
+      "id": 15443,
+      "name": "Titanium Dioxide",
+      "state": "have",
+      "family": "addition",
+      "analysis": {
+        "TiO2": 100
+      }
+    },
+    {
+      "id": 15457,
+      "name": "Whiting",
+      "state": "have",
+      "family": "ordinary",
+      "analysis": {
+        "CaO": 56.1
+      }
+    },
+    {
+      "id": 15467,
+      "name": "Zinc Oxide",
+      "state": "have",
+      "family": "ordinary",
+      "analysis": {
+        "ZnO": 100
+      }
+    },
+    {
+      "id": 15469,
+      "name": "Zircopax",
+      "state": "have",
+      "family": "addition",
+      "analysis": {
+        "SiO2": 32.7779,
+        "ZrO2": 67.2221
+      }
+    }
+  ]
+}
