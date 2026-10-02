@@ -1,0 +1,43 @@
+/*
+ * RB Glazy – Mix Checklist
+ * Version: 1.0.0
+ *
+ * Presentation only. Behaviour lives in mix-checklist.js.
+ */
+
+#rb-glazy-mix-checklist {
+  margin: 0 0 16px;
+  overflow-x: auto;
+}
+
+#rb-glazy-mix-checklist .rb-mix-table {
+  width: 100%;
+}
+
+#rb-glazy-mix-checklist .rb-mix-section td {
+  padding: 8px 6px 4px;
+  font-weight: 700;
+  background: #f0f0f0;
+  color: #222;
+}
+
+#rb-glazy-mix-checklist .rb-mix-ingredient-row {
+  cursor: pointer;
+}
+
+#rb-glazy-mix-checklist .rb-mix-checkbox {
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  margin: 0 10px 0 2px;
+  cursor: pointer;
+}
+
+#rb-glazy-mix-checklist .rb-mix-done td {
+  opacity: 0.55;
+  text-decoration: line-through;
+}
+
+#rb-glazy-mix-checklist .rb-mix-done .rb-mix-checkbox {
+  opacity: 1;
+}
