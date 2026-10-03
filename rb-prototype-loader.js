@@ -49,10 +49,23 @@
     });
   }
 
-  delete window[MANIFEST_GLOBAL];
-  var ms=document.createElement('script');
-  ms.src=MANIFEST_URL+'?rb='+Date.now();
-  load(ms,'prototype manifest').then(function(){ms.remove();return useManifest();}).then(finish,function(err){
+  function loadManifestAttempt(attempt){
+    delete window[MANIFEST_GLOBAL];
+    var ms=document.createElement('script');
+    var nonce=Date.now()+'-'+attempt+'-'+Math.random().toString(36).slice(2);
+    ms.src=MANIFEST_URL+'?rb='+encodeURIComponent(nonce);
+    return load(ms,'prototype manifest').then(function(){
+      ms.remove();
+      var m=window[MANIFEST_GLOBAL];
+      if(!m||!m.version) throw new Error('Missing prototype release information.');
+      if(attempt===1 && state.version && m.version===state.version){
+        return loadManifestAttempt(2);
+      }
+      return useManifest();
+    });
+  }
+
+  loadManifestAttempt(1).then(finish,function(err){
     finish(); console.error('[RB Prototype]',err); alert('Ronald Prototype\n\nThe current prototype could not be loaded on this page.');
   });
 })();
