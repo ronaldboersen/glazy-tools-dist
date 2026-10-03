@@ -1,1 +1,1 @@
-window.RB_PROTOTYPE_MANIFEST={"name":"Glaze melt predictor","version":"0.1.1","script":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-melt-predictor-v0.1.1.js","style":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-melt-predictor-v0.1.1.css"};
+window.RB_PROTOTYPE_MANIFEST={"name":"Glaze melt predictor","version":"0.1.2","script":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-melt-predictor-v0.1.2.js","style":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-melt-predictor-v0.1.2.css"};
