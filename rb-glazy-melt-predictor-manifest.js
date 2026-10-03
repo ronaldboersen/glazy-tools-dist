@@ -1,1 +1,1 @@
-window.RB_GLAZY_MELT_PREDICTOR_MANIFEST={"version":"0.4.8","script":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-melt-predictor-v0.4.8.js","style":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-melt-predictor-v0.4.8.css"};
+window.RB_GLAZY_MELT_PREDICTOR_MANIFEST={"version":"0.5.0","script":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-melt-predictor-v0.5.0.js","style":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-melt-predictor-v0.5.0.css"};
