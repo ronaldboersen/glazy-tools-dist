@@ -1,1 +1,1 @@
-window.RB_GLAZY_BLEND_PHOTO_MANAGER_MANIFEST={"version":"1.0.2","script":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-blend-photo-manager-v1.0.2.js","style":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-blend-photo-manager-v1.0.2.css"};
+window.RB_GLAZY_BLEND_PHOTO_MANAGER_MANIFEST={"version":"1.0.3","script":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-blend-photo-manager-v1.0.3.js","style":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-blend-photo-manager-v1.0.3.css"};
