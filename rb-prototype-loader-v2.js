@@ -18,13 +18,16 @@ function parseManifest(src){var m=src.match(/RB_PROTOTYPE_MANIFEST\s*=\s*(\{[\s\
 function basename(url){return new URL(url).pathname.split('/').pop();}
 fetch(API+'&rb='+Date.now(),{cache:'no-store',headers:{Accept:'application/vnd.github+json'}})
 .then(function(r){if(!r.ok)throw new Error('Manifest API returned '+r.status);return r.json();})
-.then(function(j){var m=parseManifest(decodeContent(j.content||''));if(!m.ref||!m.script)throw new Error('Manifest is missing immutable asset ref.');
+.then(function(j){var m=parseManifest(decodeContent(j.content||''));var scripts=Array.isArray(m.scripts)?m.scripts:(m.script?[m.script]:[]);if(!m.ref||!scripts.length)throw new Error('Manifest is missing immutable asset ref or scripts.');
  if(window.RBPrototype&&window.RBPrototype.stop){try{window.RBPrototype.stop();}catch(e){}}
  if(window.RBGlazyMeltPredictor&&window.RBGlazyMeltPredictor.stop){try{window.RBGlazyMeltPredictor.stop();}catch(e){}}
- remove('rb-prototype-script');remove('rb-prototype-style');
+ remove('rb-prototype-style');
+ var old=document.querySelectorAll('[id^="rb-prototype-script"]');
+ for(var oi=0;oi<old.length;oi++)old[oi].remove();
  var base='https://cdn.jsdelivr.net/gh/ronaldboersen/glazy-tools-dist@'+encodeURIComponent(m.ref)+'/';
  var chain=Promise.resolve();
  if(m.style){chain=chain.then(function(){var css=document.createElement('link');css.id='rb-prototype-style';css.rel='stylesheet';css.href=base+basename(m.style);return load(css,'prototype stylesheet');});}
- return chain.then(function(){var js=document.createElement('script');js.id='rb-prototype-script';js.src=base+basename(m.script);return load(js,'prototype script');}).then(function(){state.version=m.version;state.name=m.name||'Prototype';});
+ scripts.forEach(function(src,index){chain=chain.then(function(){var js=document.createElement('script');js.id='rb-prototype-script-'+index;js.src=base+basename(src);return load(js,'prototype script '+(index+1));});});
+ return chain.then(function(){state.version=m.version;state.name=m.name||'Prototype';state.scripts=scripts.slice();});
 }).then(finish,fail);
 })();
