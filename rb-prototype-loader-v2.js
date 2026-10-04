@@ -1,6 +1,7 @@
 (function(){
 'use strict';
-var API='https://api.github.com/repos/ronaldboersen/glazy-tools-dist/contents/rb-prototype-manifest.js?ref=main';
+var REPO='ronaldboersen/glazy-tools-dist';
+var API='https://api.github.com/repos/'+REPO+'/contents/rb-prototype-manifest.js?ref=main';
 var STATE='RBPrototypeLoaderState';
 var state=window[STATE]=window[STATE]||{};
 if(state.busy)return;
@@ -10,7 +11,7 @@ function finish(){state.busy=false;}
 function fail(err){
   finish();
   console.error('[RB Prototype]',err);
-  alert('Ronald Prototype\\n\\nThe current prototype could not be loaded on this page.');
+  alert('Ronald Prototype\\n\\nThe current prototype could not be loaded.\\n\\n'+(err&&err.message?err.message:String(err)));
 }
 function load(el,label){
   return new Promise(function(resolve,reject){
@@ -21,7 +22,7 @@ function load(el,label){
       if(err){el.remove();reject(err);}else resolve();
     }
     el.onload=function(){settle();};
-    el.onerror=function(){settle(new Error('Could not load '+label));};
+    el.onerror=function(){settle(new Error('Could not load '+label+': '+(el.src||el.href||'')));};
     document.head.appendChild(el);
   });
 }
@@ -35,7 +36,6 @@ function parseManifest(src){
   if(!m)throw new Error('Could not parse prototype manifest.');
   return JSON.parse(m[1]);
 }
-function basename(url){return new URL(url,location.href).pathname.split('/').pop();}
 function assetType(asset){
   if(asset&&typeof asset==='object'&&asset.type)return String(asset.type).toLowerCase();
   var src=typeof asset==='string'?asset:(asset&&asset.src)||'';
@@ -46,18 +46,18 @@ function assetType(asset){
 function assetSrc(asset){
   return typeof asset==='string'?asset:(asset&&asset.src);
 }
-function buildUrl(src,base){
+function buildUrl(src,ref){
   if(!src)throw new Error('Manifest asset is missing src.');
-  if(/^https?:\/\//i.test(src))return base+basename(src);
-  return base+String(src).replace(/^\/+/, '');
+  if(/^https?:\/\//i.test(src))return src;
+  return 'https://raw.githubusercontent.com/'+REPO+'/'+encodeURIComponent(ref)+'/'+String(src).replace(/^\/+/, '');
 }
 function clearOldAssets(){
-  var old=document.querySelectorAll('[data-rb-prototype-asset]');
+  var old=document.querySelectorAll('[data-rb-prototype-asset],[id="rb-prototype-style"],[id^="rb-prototype-script"]');
   for(var i=0;i<old.length;i++)old[i].remove();
 }
-function makeAsset(asset,index,base){
+function makeAsset(asset,index,ref){
   var type=assetType(asset);
-  var src=buildUrl(assetSrc(asset),base);
+  var src=buildUrl(assetSrc(asset),ref);
   var el;
   if(type==='css'||type==='style'||type==='stylesheet'){
     el=document.createElement('link');
@@ -70,7 +70,7 @@ function makeAsset(asset,index,base){
     throw new Error('Unsupported prototype asset type: '+type);
   }
   el.setAttribute('data-rb-prototype-asset',String(index));
-  return {el:el,label:'prototype asset '+(index+1)};
+  return {el:el,label:'asset '+(index+1)+' ('+assetSrc(asset)+')'};
 }
 
 fetch(API+'&rb='+Date.now(),{cache:'no-store',headers:{Accept:'application/vnd.github+json'}})
@@ -88,12 +88,10 @@ fetch(API+'&rb='+Date.now(),{cache:'no-store',headers:{Accept:'application/vnd.g
 
   clearOldAssets();
 
-  var base='https://cdn.jsdelivr.net/gh/ronaldboersen/glazy-tools-dist@'+encodeURIComponent(m.ref)+'/';
   var chain=Promise.resolve();
-
   assets.forEach(function(asset,index){
     chain=chain.then(function(){
-      var built=makeAsset(asset,index,base);
+      var built=makeAsset(asset,index,m.ref);
       return load(built.el,built.label);
     });
   });
@@ -102,6 +100,7 @@ fetch(API+'&rb='+Date.now(),{cache:'no-store',headers:{Accept:'application/vnd.g
     state.version=m.version;
     state.name=m.name||'Prototype';
     state.assets=assets.slice();
+    state.ref=m.ref;
   });
 })
 .then(finish,fail);
