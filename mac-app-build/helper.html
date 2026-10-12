@@ -1,0 +1,40 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ronald’s Mac Label Helper</title><style>
+body{font:16px/1.5 system-ui,sans-serif;max-width:660px;padding:24px;margin:auto;color:#252525}h1{font-size:24px;color:#888}button,select{font:inherit;padding:10px;border:1px solid #bbb;border-radius:6px;background:#fff;margin:5px}button{cursor:pointer}button.primary{background:#377044;color:white}button:disabled{opacity:.5}select{width:100%;margin:5px 0}.status{padding:14px;background:#f3f6f3;white-space:pre-line;border-radius:8px}.error{color:#a02a22;background:#fff1ef}canvas{max-width:100%;height:auto;border:1px solid #ddd}small{color:#666}.simulate{color:#a02a22}</style></head><body>
+<h1>Ronald’s Mac Label Helper</h1><p>Connect your M110 here, then return to Glazy to preview and print your label. Keep this tab and the helper’s Terminal window open.</p>
+<button id="scan">Find printers</button><select id="devices" aria-label="Bluetooth printer"><option value="">Choose your M110…</option></select><button class="primary" id="connect">Connect selected printer</button><button id="disconnect">Disconnect</button>
+<p class="status" id="status" role="status">Looking for your saved printer…</p><canvas id="preview" hidden></canvas><p><small>Disconnect the M110 from your iPhone or other apps before connecting it here. If macOS asks, allow Bluetooth access. This helper accepts label jobs only from Glazy.</small></p>
+<script>
+const TOKEN=__RB_TOKEN__,CHANNEL='RB-M110-MAC-v1',PARENT='https://glazy.org';
+const session=new URLSearchParams(location.hash.slice(1)).get('session'),choose=new URLSearchParams(location.hash.slice(1)).get('choose')==='1';
+const $=id=>document.getElementById(id);let state={},busy=false;
+async function api(action,data={}){const r=await fetch('/api/'+action,{method:'POST',headers:{'Content-Type':'application/json','X-RB-Token':TOKEN},body:JSON.stringify(data)});const j=await r.json();if(!r.ok){const e=Error(j.error||'Helper returned HTTP '+r.status);e.printStarted=j.printStarted;throw e}return j}
+function send(type,data={}){if(window.opener&&session)window.opener.postMessage({channel:CHANNEL,session,type,...data},PARENT)}
+function say(text,error=false){$('status').textContent=text;$('status').classList.toggle('error',error)}
+function controls(){$('scan').disabled=$('connect').disabled=$('disconnect').disabled=busy||state.busy}
+function apply(next){state=next;controls();send('state',{state});if(!busy)say(state.connected?'Connected to '+state.name+'. Return to Glazy to print.':'Printer not connected. Turn on the M110 and choose it below.')}
+async function scan(){busy=true;controls();say('Looking for nearby Bluetooth printers…');try{const j=await api('scan');$('devices').replaceChildren(new Option('Choose your M110…',''),...j.devices.map(d=>new Option(d.name,d.id)));say(j.devices.length?'Choose your M110, then connect.':'No printers found. Check Bluetooth permissions and that the M110 is on.')}catch(e){say(e.message,true)}finally{busy=false;controls()}}
+$('scan').onclick=scan;
+$('connect').onclick=async()=>{const id=$('devices').value;if(!id)return;busy=true;controls();say('Connecting…');try{state=await api('connect',{id,name:$('devices').selectedOptions[0].textContent});busy=false;apply(state)}catch(e){say(e.message,true)}finally{busy=false;controls()}};
+$('disconnect').onclick=async()=>{try{apply(await api('disconnect'))}catch(e){say(e.message,true)}};
+function preview(p){if(!p||!Number.isInteger(p.widthBytes)||p.widthBytes<1||p.widthBytes>48||!Number.isInteger(p.height)||p.height<1||p.height>1200)throw Error('Invalid label dimensions.');const raw=Uint8Array.from(atob(p.data),c=>c.charCodeAt(0));if(raw.length!==p.widthBytes*p.height)throw Error('Invalid label pixels.');const c=$('preview');c.width=p.widthBytes*8;c.height=p.height;c.hidden=false;const ctx=c.getContext('2d'),image=ctx.createImageData(c.width,c.height);for(let y=0;y<c.height;y++)for(let x=0;x<c.width;x++){const black=raw[y*p.widthBytes+(x>>3)]&(128>>(x&7)),i=(y*c.width+x)*4;image.data[i]=image.data[i+1]=image.data[i+2]=black?0:255;image.data[i+3]=255}ctx.putImageData(image,0,0)}
+window.addEventListener('message',async event=>{
+if(event.origin!==PARENT||event.source!==window.opener)return;
+const m=event.data;if(!m||m.channel!==CHANNEL||m.session!==session||typeof m.id!=='string')return;
+let ownsBusy=false;try{let result;
+if(m.action==='status')result=await api('status');
+else if(m.action==='disconnect'){result=await api('disconnect');apply(result)}
+else if(m.action==='print'){
+if(busy||state.busy){const e=Error('The helper is already busy.');e.printStarted=false;throw e}preview(m.payload);busy=true;ownsBusy=true;controls();say('Sending label…');
+const job=await api('print',m.payload);
+for(;;){const current=await api('job',{id:job.id});send('progress',{id:m.id,percent:current.percent});say('Sending label · '+current.percent+'%');
+if(current.state==='error'){const e=Error(current.error);e.printStarted=current.printStarted;throw e}
+if(current.state==='sent'){result=current;break}await new Promise(r=>setTimeout(r,250))}
+say(result.acknowledged?'Label data acknowledged. Wait for the physical label to finish.':'Label data sent. Check the physical output.');
+}else throw Error('Unknown bridge command.');
+send('reply',{id:m.id,result});
+}catch(e){say(e.message,true);send('reply',{id:m.id,error:e.message,printStarted:e.printStarted})}
+finally{if(ownsBusy)busy=false;controls();try{state=await api('status');send('state',{state})}catch{}}
+});
+(async()=>{send('ready');try{if(choose)apply(await api('disconnect'));else apply(await api('restore'));if(!state.connected)await scan()}catch(e){say(e.message,true);await scan()}})();
+setInterval(async()=>{if(busy)return;try{const next=await api('status');state=next;controls();send('state',{state:next})}catch{}},1500);
+</script></body></html>

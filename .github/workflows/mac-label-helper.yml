@@ -1,0 +1,86 @@
+name: Build Mac Label Helper app
+on:
+  push:
+    paths:
+      - 'mac-app-build/**'
+      - '.github/workflows/mac-label-helper.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15
+            arch: Apple-silicon
+          - runner: macos-15-intel
+            arch: Intel
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install bundled runtime dependencies
+        run: python -m pip install -r mac-app-build/requirements.txt pyinstaller==6.22.3 pyobjc-framework-Cocoa
+      - name: Unpack distribution build inputs
+        run: |
+          python - <<'PYCODE'
+          import base64, zlib, ast
+          from pathlib import Path
+          for name in ['mac_app.py', 'helper.py']:
+              path = Path('mac-app-build') / name
+              tree = ast.parse(path.read_text())
+              payload = next(node.value for node in ast.walk(tree) if isinstance(node, ast.Constant) and isinstance(node.value, str) and len(node.value) > 100)
+              path.write_bytes(zlib.decompress(base64.b64decode(payload)))
+          PYCODE
+      - name: Include Python licence
+        run: |
+          python - <<'PY'
+          import sys, urllib.request
+          from pathlib import Path
+          version = '.'.join(map(str, sys.version_info[:3]))
+          url = 'https://raw.githubusercontent.com/python/cpython/v' + version + '/LICENSE'
+          Path('mac-app-build/PYTHON-LICENSE.txt').write_bytes(urllib.request.urlopen(url).read())
+          PY
+      - name: Build Cocoa app
+        run: python -m PyInstaller --noconfirm --clean mac-app-build/mac-app.spec
+      - name: Check packaged runtime and protocol
+        run: |
+          'dist/Ronalds Mac Label Helper.app/Contents/MacOS/Ronalds Mac Label Helper' --smoke-test
+          'dist/Ronalds Mac Label Helper.app/Contents/MacOS/Ronalds Mac Label Helper' --smoke-app
+          codesign --verify --deep --strict 'dist/Ronalds Mac Label Helper.app'
+          test -n "$(/usr/libexec/PlistBuddy -c 'Print NSBluetoothAlwaysUsageDescription' 'dist/Ronalds Mac Label Helper.app/Contents/Info.plist')"
+      - name: Package app
+        env:
+          RB_ARCH: ${{ matrix.arch }}
+        run: |
+          mkdir -p app-package
+          cp -R 'dist/Ronalds Mac Label Helper.app' app-package/
+          cp mac-app-build/APP-README.txt app-package/README.txt
+          ditto -c -k --sequesterRsrc --keepParent app-package "Ronalds-Mac-Label-Helper-App-v0.1.1-${RB_ARCH}.zip"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Mac-Label-Helper-App-${{ matrix.arch }}
+          path: Ronalds-Mac-Label-Helper-App-v0.1.1-*.zip
+          retention-days: 30
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: Mac-Label-Helper-App-*
+          path: app-downloads
+          merge-multiple: true
+      - name: Publish tested app bundles
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create rb-mac-label-helper-v0.1.1 app-downloads/*.zip --target "$GITHUB_SHA" --title "Ronald's Mac Label Helper app v0.1.1" --notes-file mac-app-build/APP-README.txt
