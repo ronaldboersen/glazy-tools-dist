@@ -28,3 +28,4 @@ https://github.com/vivier/phomemo-tools
 Phomymo code was inspected for command bytes and pacing; its implementation
 was not incorporated. Its README claims MIT but its root LICENSE was absent
 at inspection on 12 October 2026.
+
