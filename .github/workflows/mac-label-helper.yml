@@ -25,7 +25,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Install bundled runtime dependencies
-        run: python -m pip install -r mac-app-build/requirements.txt pyinstaller==6.22.3 pyobjc-framework-Cocoa
+        run: python -m pip install -r mac-app-build/requirements.txt pyinstaller==6.22.3 pyobjc-framework-Cocoa pyobjc-framework-WebKit
       - name: Unpack distribution build inputs
         run: |
           python - <<'PYCODE'
@@ -46,6 +46,8 @@ jobs:
           url = 'https://raw.githubusercontent.com/python/cpython/v' + version + '/LICENSE'
           Path('mac-app-build/PYTHON-LICENSE.txt').write_bytes(urllib.request.urlopen(url).read())
           PY
+      - name: Test inline Safari WebKit connection
+        run: python mac-app-build/webkit-test.py --helper-dir mac-app-build --fixtures mac-app-build --runtime rb-glazy-label-printer-v0.1.7.js
       - name: Build Cocoa app
         run: python -m PyInstaller --noconfirm --clean mac-app-build/mac-app.spec
       - name: Check packaged runtime and protocol
@@ -61,11 +63,11 @@ jobs:
           mkdir -p app-package
           cp -R 'dist/Ronalds Mac Label Helper.app' app-package/
           cp mac-app-build/APP-README.txt app-package/README.txt
-          ditto -c -k --sequesterRsrc --keepParent app-package "Ronalds-Mac-Label-Helper-App-v0.1.1-${RB_ARCH}.zip"
+          ditto -c -k --sequesterRsrc --keepParent app-package "Ronalds-Mac-Label-Helper-App-v0.1.2-${RB_ARCH}.zip"
       - uses: actions/upload-artifact@v4
         with:
           name: Mac-Label-Helper-App-${{ matrix.arch }}
-          path: Ronalds-Mac-Label-Helper-App-v0.1.1-*.zip
+          path: Ronalds-Mac-Label-Helper-App-v0.1.2-*.zip
           retention-days: 30
   release:
     needs: build
@@ -83,4 +85,4 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create rb-mac-label-helper-v0.1.1 app-downloads/*.zip --target "$GITHUB_SHA" --title "Ronald's Mac Label Helper app v0.1.1" --notes-file mac-app-build/APP-README.txt
+          gh release create rb-mac-label-helper-v0.1.2 app-downloads/*.zip --target "$GITHUB_SHA" --title "Ronald's Mac Label Helper app v0.1.2" --notes-file mac-app-build/APP-README.txt
