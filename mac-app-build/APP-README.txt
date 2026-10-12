@@ -1,4 +1,4 @@
-Ronald’s Mac Label Helper app — v0.1.2
+Ronald’s Mac Label Helper app — v0.1.3
 
 Use Apple silicon for Macs with an M1, M2, M3 or newer Apple chip. Use Intel for
 Intel Macs. Check Apple menu → About This Mac if unsure.

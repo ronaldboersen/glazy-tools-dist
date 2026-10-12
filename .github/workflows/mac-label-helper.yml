@@ -63,11 +63,11 @@ jobs:
           mkdir -p app-package
           cp -R 'dist/Ronalds Mac Label Helper.app' app-package/
           cp mac-app-build/APP-README.txt app-package/README.txt
-          ditto -c -k --sequesterRsrc --keepParent app-package "Ronalds-Mac-Label-Helper-App-v0.1.2-${RB_ARCH}.zip"
+          ditto -c -k --sequesterRsrc --keepParent app-package "Ronalds-Mac-Label-Helper-App-v0.1.3-${RB_ARCH}.zip"
       - uses: actions/upload-artifact@v4
         with:
           name: Mac-Label-Helper-App-${{ matrix.arch }}
-          path: Ronalds-Mac-Label-Helper-App-v0.1.2-*.zip
+          path: Ronalds-Mac-Label-Helper-App-v0.1.3-*.zip
           retention-days: 30
   release:
     needs: build
@@ -85,4 +85,4 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create rb-mac-label-helper-v0.1.2 app-downloads/*.zip --target "$GITHUB_SHA" --title "Ronald's Mac Label Helper app v0.1.2" --notes-file mac-app-build/APP-README.txt
+          gh release create rb-mac-label-helper-v0.1.3 app-downloads/*.zip --target "$GITHUB_SHA" --title "Ronald's Mac Label Helper app v0.1.3" --notes-file mac-app-build/APP-README.txt
