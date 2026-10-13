@@ -1,1 +1,1 @@
-window.RB_GLAZY_LABEL_PRINTER_MANIFEST={"version":"0.1.12","script":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-label-printer-v0.1.12.js","style":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-label-printer-v0.1.12.css"};
+window.RB_GLAZY_LABEL_PRINTER_MANIFEST={"version":"0.1.13","script":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-label-printer-v0.1.13.js","style":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-label-printer-v0.1.13.css"};
