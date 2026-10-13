@@ -1,1 +1,1 @@
-window.RB_GLAZY_TOOLBOX_MANIFEST={"version":"0.1.6","script":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-toolbox-v0.1.6.js","style":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-toolbox-v0.1.6.css"};
+window.RB_GLAZY_TOOLBOX_MANIFEST={"version":"0.1.7","script":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-toolbox-v0.1.7.js","style":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-toolbox-v0.1.7.css"};
