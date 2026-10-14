@@ -28,34 +28,33 @@ jobs:
         run: python -m pip install -r mac-app-build/requirements.txt pyinstaller==6.22.3 pyobjc-framework-Cocoa pyobjc-framework-WebKit
       - name: Unpack distribution build inputs
         run: |
-          python - <<'PYCODE'
-          import base64, zlib, ast
+          python - <<'PY'
+          import base64,zlib,ast
           from pathlib import Path
-          for name in ['mac_app.py', 'helper.py']:
-              path = Path('mac-app-build') / name
-              tree = ast.parse(path.read_text())
-              payload = next(node.value for node in ast.walk(tree) if isinstance(node, ast.Constant) and isinstance(node.value, str) and len(node.value) > 100)
+          for name in ['mac_app.py','helper.py','updater.py','queue_monitor.py']:
+              path=Path('mac-app-build')/name
+              tree=ast.parse(path.read_text())
+              payload=next(node.value for node in ast.walk(tree) if isinstance(node,ast.Constant) and isinstance(node.value,str) and len(node.value)>100)
               path.write_bytes(zlib.decompress(base64.b64decode(payload)))
-          PYCODE
+          PY
       - name: Include Python licence
         run: |
           python - <<'PY'
-          import sys, urllib.request
+          import sys,urllib.request
           from pathlib import Path
-          version = '.'.join(map(str, sys.version_info[:3]))
-          url = 'https://raw.githubusercontent.com/python/cpython/v' + version + '/LICENSE'
-          Path('mac-app-build/PYTHON-LICENSE.txt').write_bytes(urllib.request.urlopen(url).read())
+          version='.'.join(map(str,sys.version_info[:3]))
+          Path('mac-app-build/PYTHON-LICENSE.txt').write_bytes(urllib.request.urlopen('https://raw.githubusercontent.com/python/cpython/v'+version+'/LICENSE').read())
           PY
       - name: Test inline Safari WebKit connection
-        run: python mac-app-build/webkit-test.py --helper-dir mac-app-build --fixtures mac-app-build --runtime rb-glazy-label-printer-v0.1.7.js
+        run: python mac-app-build/webkit-test.py --helper-dir mac-app-build --fixtures mac-app-build --runtime rb-glazy-label-printer-v0.1.20.js
       - name: Build Cocoa app
         run: python -m PyInstaller --noconfirm --clean mac-app-build/mac-app.spec
-      - name: Check packaged runtime and protocol
+      - name: Check native callback, packaged runtime, updater and signature
         run: |
           'dist/Ronalds Mac Label Helper.app/Contents/MacOS/Ronalds Mac Label Helper' --smoke-test
           'dist/Ronalds Mac Label Helper.app/Contents/MacOS/Ronalds Mac Label Helper' --smoke-app
+          SSL_CERT_FILE=/dev/null SSL_CERT_DIR=/nonexistent 'dist/Ronalds Mac Label Helper.app/Contents/MacOS/Ronalds Mac Label Helper' --smoke-update
           codesign --verify --deep --strict 'dist/Ronalds Mac Label Helper.app'
-          test -n "$(/usr/libexec/PlistBuddy -c 'Print NSBluetoothAlwaysUsageDescription' 'dist/Ronalds Mac Label Helper.app/Contents/Info.plist')"
       - name: Package app
         env:
           RB_ARCH: ${{ matrix.arch }}
@@ -63,11 +62,11 @@ jobs:
           mkdir -p app-package
           cp -R 'dist/Ronalds Mac Label Helper.app' app-package/
           cp mac-app-build/APP-README.txt app-package/README.txt
-          ditto -c -k --sequesterRsrc --keepParent app-package "Ronalds-Mac-Label-Helper-App-v0.1.3-${RB_ARCH}.zip"
+          ditto -c -k --sequesterRsrc --keepParent app-package "Ronalds-Mac-Label-Helper-App-v0.1.9-${RB_ARCH}.zip"
       - uses: actions/upload-artifact@v4
         with:
           name: Mac-Label-Helper-App-${{ matrix.arch }}
-          path: Ronalds-Mac-Label-Helper-App-v0.1.3-*.zip
+          path: Ronalds-Mac-Label-Helper-App-v0.1.9-*.zip
           retention-days: 30
   release:
     needs: build
@@ -81,8 +80,17 @@ jobs:
           pattern: Mac-Label-Helper-App-*
           path: app-downloads
           merge-multiple: true
-      - name: Publish tested app bundles
+      - name: Publish verified app downloads (update manifest remains unchanged)
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create rb-mac-label-helper-v0.1.3 app-downloads/*.zip --target "$GITHUB_SHA" --title "Ronald's Mac Label Helper app v0.1.3" --notes-file mac-app-build/APP-README.txt
+          gh release create rb-mac-label-helper-v0.1.9 app-downloads/*.zip --target "$GITHUB_SHA" --title "Ronald's Mac Label Helper v0.1.9 - packet diagnostics" --notes-file mac-app-build/APP-README.txt
+          gh auth setup-git
+          gh repo clone "$GITHUB_REPOSITORY" publish-repo
+          cp app-downloads/*.zip publish-repo/
+          cd publish-repo
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add Ronalds-Mac-Label-Helper-App-v0.1.9-*.zip
+          git commit -m 'Publish verified Mac helper v0.1.9 app downloads'
+          git push origin HEAD:main

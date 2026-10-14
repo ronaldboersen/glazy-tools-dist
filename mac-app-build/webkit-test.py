@@ -1,2 +1,133 @@
-import base64,zlib
-exec(compile(zlib.decompress(base64.b64decode('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')),__file__,"exec"))
+"""Real macOS WebKit: HTTPS Glazy -> loopback images -> simulated M110."""
+import argparse
+import json
+import os
+import sys
+import time
+import objc
+from pathlib import Path
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--helper-dir', required=True)
+parser.add_argument('--fixtures', required=True)
+parser.add_argument('--runtime', required=True)
+args = parser.parse_args()
+sys.path.insert(0, str(Path(args.helper_dir).resolve()))
+from mac_app import Server
+from AppKit import NSApplication, NSWindow, NSBackingStoreBuffered, NSApplicationActivationPolicyRegular
+from Foundation import NSObject, NSURL, NSURLRequest, NSTimer
+from WebKit import WKWebView, WKWebViewConfiguration, WKWebsiteDataStore, WKContentRuleListStore
+
+fixtures = Path(args.fixtures)
+recipe = json.loads((fixtures/'label-printer-recipe.json').read_text())
+html = (fixtures/'label-printer-source.html').read_text()
+runtime = Path(args.runtime).read_text()
+server = Server(simulate=True)
+server.start()
+if not server.ready.wait(10) or server.error:
+    raise RuntimeError(server.error or 'Test server did not start')
+
+script = '''(async()=>{
+try{
+if(location.origin!=='https://glazy.org'||!isSecureContext)throw Error('Test requires the real HTTPS Glazy origin');
+const progress=stage=>window.webkit.messageHandlers.rbLabelTest.postMessage({stage});progress('HTTPS origin verified');
+document.body.innerHTML=FIXTURE_HTML;
+window.fetch=async()=>({ok:true,json:async()=>(FIXTURE_RECIPE)});
+window.open=()=>{throw Error('A separate window must never be opened')};
+Object.defineProperty(navigator,'bluetooth',{value:undefined});
+eval(RUNTIME_CODE);
+progress('Label tool opened');
+const $=id=>document.querySelector('#rb-glazy-label-printer').shadowRoot.getElementById(id);
+async function until(check){for(let i=0;i<240;i++){if(check())return;await new Promise(r=>setTimeout(r,100))}throw Error('Timeout: '+$('printerStatus').textContent+' / '+$('status').textContent)}
+await until(()=>!$('connect').disabled);
+progress('Recipe ready');
+$('size').value='compact';$('size').dispatchEvent(new Event('change'));
+await until(()=>!$('connect').disabled);
+$('connect').click();
+progress('Scanning in the panel');
+await until(()=>[...$('macDevices').options].some(o=>o.value==='simulated-m110')&&!$('macDevices').disabled);
+$('macDevices').value='simulated-m110';$('macDevices').dispatchEvent(new Event('change'));
+$('macConnect').click();
+progress('Connecting selected printer');
+await until(()=>!$('print').disabled);
+for(const mode of ['auto','stream20','stream15','stream10','stream5','stream0']){
+$('transferMode').value=mode;$('transferMode').dispatchEvent(new Event('change'));
+$('print').click();progress('Sending compact label '+mode);
+await until(()=>!$('print').disabled);
+const message=$('status').textContent;
+if(!message.includes(mode==='auto'?'all data acknowledged':'image data queued without per-chunk acknowledgements'))throw Error('Wrong delivery status: '+message);
+if(!message.includes('Image send time:'))throw Error('Missing send timer');
+if(mode!=='auto'&&!message.includes(mode.slice(6)+' ms extra pause'))throw Error('Wrong stream pause');
+}
+if(!$('macPrinterPicker').hidden)throw Error('Printer picker stayed open after connection');
+progress('Block Mac queue for stop test');
+await new Promise(r=>setTimeout(r,100));
+$('print').click();
+await until(()=>$('printerStatus').textContent.includes('Waiting for Mac Bluetooth queue capacity'));
+if($('stopTransfer').hidden||$('stopTransfer').disabled)throw Error('Stop transfer unavailable while stalled');
+$('stopTransfer').click();
+await until(()=>!window.RBGlazyLabelPrinter.isBusy);
+if(!$('status').textContent.includes('Transfer stopped'))throw Error('Missing stopped status: '+$('status').textContent);
+window.webkit.messageHandlers.rbLabelTest.postMessage({ok:true,message:$('status').textContent});
+}catch(e){window.webkit.messageHandlers.rbLabelTest.postMessage({ok:false,message:e.message})}
+})();'''.replace('FIXTURE_HTML',json.dumps(html)).replace('FIXTURE_RECIPE',json.dumps(recipe)).replace('RUNTIME_CODE',json.dumps(runtime))
+script += '\nvoid 0;'
+
+class Delegate(NSObject):
+    @objc.python_method
+    def report(self, result):
+        print(('PASS: ' if result['ok'] else 'FAIL: ') + str(result['message']),flush=True)
+        server.stop()
+        # This is an isolated CI worker. Exit explicitly rather than letting
+        # WebKit's process pool keep Cocoa's application loop alive.
+        os._exit(0 if result['ok'] else 1)
+    def webView_didFinishNavigation_(self, view, navigation):
+        if getattr(self, 'started', False):
+            return
+        self.started = True
+        def evaluated(result,error):
+            if error:
+                self.report(dict(ok=False,message=str(error)))
+        view.evaluateJavaScript_completionHandler_(script,evaluated)
+    def userContentController_didReceiveScriptMessage_(self, controller, message):
+        result = dict(message.body())
+        if 'stage' in result:
+            print('WebKit: '+str(result['stage']),flush=True)
+            if result['stage']=='Block Mac queue for stop test':
+                server.printer.can_send_without_response=lambda: False
+                server.printer.queue_timeout=20
+            return
+        self.report(result)
+    def timeout_(self, timer):
+        self.report(dict(ok=False,message='WebKit test timed out'))
+
+app = NSApplication.sharedApplication()
+app.setActivationPolicy_(NSApplicationActivationPolicyRegular)
+delegate = Delegate.alloc().init()
+config = WKWebViewConfiguration.alloc().init()
+config.setWebsiteDataStore_(WKWebsiteDataStore.nonPersistentDataStore())
+config.userContentController().addScriptMessageHandler_name_(delegate,'rbLabelTest')
+view = WKWebView.alloc().initWithFrame_configuration_(((0,0),(1400,1000)),config)
+view.setNavigationDelegate_(delegate)
+window = NSWindow.alloc().initWithContentRect_styleMask_backing_defer_(((0,0),(1400,1000)),1,NSBackingStoreBuffered,False)
+window.setContentView_(view)
+window.makeKeyAndOrderFront_(None)
+# Keep Glazy's startup/hydration scripts from replacing our fixture panel.
+# Content blocking isolates the test; no mixed-content or CORS setting changes.
+rules = json.dumps([dict(trigger={'url-filter':'.*','resource-type':['script']},action={'type':'block'})])
+def rules_ready(rule,error):
+    if error:
+        delegate.report(dict(ok=False,message=str(error)))
+    config.userContentController().addContentRuleList_(rule)
+    view.loadRequest_(NSURLRequest.requestWithURL_(NSURL.URLWithString_('https://glazy.org/recipes/482013')))
+WKContentRuleListStore.defaultStore().compileContentRuleListForIdentifier_encodedContentRuleList_completionHandler_('RBLabelTestFixture',rules,rules_ready)
+timer = NSTimer.scheduledTimerWithTimeInterval_target_selector_userInfo_repeats_(90,delegate,'timeout:',None,False)
+app.run()
+timer.invalidate()
+server.stop()
+result = getattr(delegate,'result',dict(ok=False,message='No test result'))
+if not result['ok']:
+    raise RuntimeError(result['message'])
+print('PASS: real HTTPS Glazy origin in macOS WebKit, inline selection, PNG CORS replies and acknowledged compact label')
+print(result['message'])
+

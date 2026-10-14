@@ -38,3 +38,4 @@ finally{if(ownsBusy)busy=false;controls();try{state=await api('status');send('st
 (async()=>{send('ready');try{if(choose)apply(await api('disconnect'));else apply(await api('restore'));if(!state.connected)await scan()}catch(e){say(e.message,true);await scan()}})();
 setInterval(async()=>{if(busy)return;try{const next=await api('status');state=next;controls();send('state',{state:next})}catch{}},1500);
 </script></body></html>
+
