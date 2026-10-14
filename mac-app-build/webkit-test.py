@@ -38,11 +38,11 @@ Object.defineProperty(navigator,'bluetooth',{value:undefined});
 eval(RUNTIME_CODE);
 progress('Label tool opened');
 const $=id=>document.querySelector('#rb-glazy-label-printer').shadowRoot.getElementById(id);
-async function until(check){for(let i=0;i<240;i++){if(check())return;await new Promise(r=>setTimeout(r,100))}throw Error('Timeout: '+$('printerStatus').textContent+' / '+$('status').textContent)}
+async function until(check,timeout=25000){const deadline=Date.now()+timeout;while(Date.now()<deadline){if(check())return;await new Promise(r=>setTimeout(r,100))}throw Error('Timeout: '+$('printerStatus').textContent+' / '+$('status').textContent)}
 await until(()=>!$('connect').disabled);
 progress('Recipe ready');
 $('size').value='compact';$('size').dispatchEvent(new Event('change'));
-$('height').value='20';$('height').dispatchEvent(new Event('input'));
+$('height').value='20';$('height').dispatchEvent(new Event('input',{bubbles:true}));
 await until(()=>!$('connect').disabled);
 $('connect').click();
 progress('Scanning in the panel');
@@ -66,8 +66,8 @@ if(!$('macPrinterPicker').hidden)throw Error('Printer picker stayed open after c
 progress('Block Mac queue for stop test');
 await new Promise(r=>setTimeout(r,100));
 $('print').click();
-await until(()=>$('printerStatus').textContent.includes('Confirming setup'));
-if($('stopTransfer').hidden||$('stopTransfer').disabled)throw Error('Stop transfer unavailable while stalled');
+progress('Stop check initial '+JSON.stringify({busy:window.RBGlazyLabelPrinter.isBusy,hidden:$('stopTransfer').hidden,disabled:$('stopTransfer').disabled,status:$('printerStatus').textContent}));
+await until(()=>window.RBGlazyLabelPrinter.isBusy&&!$('stopTransfer').hidden&&!$('stopTransfer').disabled&&$('printerStatus').textContent.includes('Confirming setup'));
 $('stopTransfer').click();
 await until(()=>!window.RBGlazyLabelPrinter.isBusy);
 if(!$('status').textContent.includes('Transfer stopped'))throw Error('Missing stopped status: '+$('status').textContent);
