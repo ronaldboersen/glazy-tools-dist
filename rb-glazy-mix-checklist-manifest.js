@@ -1,1 +1,1 @@
-window.RB_GLAZY_MIX_CHECKLIST_MANIFEST={"version":"1.1.5","script":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-mix-checklist-v1.1.5.js","style":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-mix-checklist-v1.1.5.css"};
+window.RB_GLAZY_MIX_CHECKLIST_MANIFEST={"version":"1.1.6","script":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-mix-checklist-v1.1.6.js","style":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-mix-checklist-v1.1.6.css"};
