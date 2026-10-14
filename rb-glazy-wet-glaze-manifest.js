@@ -1,1 +1,1 @@
-window.RB_GLAZY_WET_GLAZE_MANIFEST={"version":"1.1.8","script":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-wet-glaze-v1.1.8.js","style":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-wet-glaze-v1.1.8.css"};
+window.RB_GLAZY_WET_GLAZE_MANIFEST={"version":"1.1.9","script":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-wet-glaze-v1.1.9.js","style":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-wet-glaze-v1.1.9.css"};
