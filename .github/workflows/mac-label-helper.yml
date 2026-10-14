@@ -43,7 +43,7 @@ jobs:
           Path('mac-app-build/PYTHON-LICENSE.txt').write_bytes(urllib.request.urlopen('https://raw.githubusercontent.com/python/cpython/v'+version+'/LICENSE').read())
           PY
       - name: Test inline Safari WebKit connection
-        run: python mac-app-build/webkit-test.py --helper-dir mac-app-build --fixtures mac-app-build --runtime rb-glazy-label-printer-v0.1.20.js
+        run: python mac-app-build/webkit-test.py --helper-dir mac-app-build --fixtures mac-app-build --runtime rb-glazy-label-printer-v0.1.23.js
       - name: Build Cocoa app
         run: python -m PyInstaller --noconfirm --clean mac-app-build/mac-app.spec
       - name: Check native callback, packaged runtime, updater and signature
@@ -56,14 +56,11 @@ jobs:
         env:
           RB_ARCH: ${{ matrix.arch }}
         run: |
-          mkdir -p app-package
-          cp -R 'dist/Ronalds Mac Label Helper.app' app-package/
-          cp mac-app-build/APP-README.txt app-package/README.txt
-          ditto -c -k --sequesterRsrc --keepParent app-package "Ronalds-Mac-Label-Helper-App-v0.1.9-${RB_ARCH}.zip"
+          ditto -c -k --sequesterRsrc --keepParent 'dist/Ronalds Mac Label Helper.app' "Ronalds-Mac-Label-Helper-App-v0.1.10-${RB_ARCH}.zip"
       - uses: actions/upload-artifact@v4
         with:
           name: Mac-Label-Helper-App-${{ matrix.arch }}
-          path: Ronalds-Mac-Label-Helper-App-v0.1.9-*.zip
+          path: Ronalds-Mac-Label-Helper-App-v0.1.10-*.zip
           retention-days: 30
   release:
     needs: build
@@ -81,13 +78,13 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create rb-mac-label-helper-v0.1.9 app-downloads/*.zip --target "$GITHUB_SHA" --title "Ronald's Mac Label Helper v0.1.9 - packet diagnostics" --notes-file mac-app-build/APP-README.txt
+          gh release create rb-mac-label-helper-v0.1.10 app-downloads/*.zip --target "$GITHUB_SHA" --title "Ronald's Mac Label Helper v0.1.10 - confirmed packet tests" --notes-file mac-app-build/APP-README.txt
           gh auth setup-git
           gh repo clone "$GITHUB_REPOSITORY" publish-repo
           cp app-downloads/*.zip publish-repo/
           cd publish-repo
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add Ronalds-Mac-Label-Helper-App-v0.1.9-*.zip
-          git commit -m 'Publish verified Mac helper v0.1.9 app downloads'
+          git add Ronalds-Mac-Label-Helper-App-v0.1.10-*.zip
+          git commit -m 'Publish verified Mac helper v0.1.10 app downloads'
           git push origin HEAD:main

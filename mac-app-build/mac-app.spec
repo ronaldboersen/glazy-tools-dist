@@ -18,7 +18,7 @@ exe = EXE(pyz, a.scripts, [], exclude_binaries=True, name=name,
     entitlements_file=None)
 coll = COLLECT(exe, a.binaries, a.datas, strip=False, upx=False, name=name)
 app = BUNDLE(coll, name=name+'.app', bundle_identifier='com.ronaldboersen.glazy-label-helper',
-    info_plist={'CFBundleShortVersionString':'0.1.9', 'CFBundleVersion':'0.1.9',
+    info_plist={'CFBundleShortVersionString':'0.1.10', 'CFBundleVersion':'0.1.10',
         'NSBluetoothAlwaysUsageDescription':'Connect to your Phomemo M110 to print glaze labels from Glazy.',
         'NSBluetoothPeripheralUsageDescription':'Connect to your Phomemo M110 to print glaze labels.',
         'NSHighResolutionCapable':True})

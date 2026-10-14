@@ -50,20 +50,22 @@ $('macDevices').value='simulated-m110';$('macDevices').dispatchEvent(new Event('
 $('macConnect').click();
 progress('Connecting selected printer');
 await until(()=>!$('print').disabled);
-for(const mode of ['auto','stream20','stream15','stream10','stream5','stream0']){
+if(JSON.stringify([...$('transferMode').options].map(o=>o.value))!==JSON.stringify(['auto','steady']))throw Error('Unexpected speed choices');
+if(JSON.stringify([...$('packetBytes').options].map(o=>o.value))!==JSON.stringify(['128','192','256']))throw Error('Unexpected packet choices');
+for(const [mode,packet] of [['auto',128],['auto',192],['auto',256],['steady',128]]){
 $('transferMode').value=mode;$('transferMode').dispatchEvent(new Event('change'));
-$('print').click();progress('Sending compact label '+mode);
+$('packetBytes').value=String(packet);$('packetBytes').dispatchEvent(new Event('change'));
+$('print').click();progress('Sending compact label '+mode+' '+packet);
 await until(()=>!$('print').disabled);
 const message=$('status').textContent;
-if(!message.includes(mode==='auto'?'all data acknowledged':'image data queued without per-chunk acknowledgements'))throw Error('Wrong delivery status: '+message);
+if(!message.includes('all data acknowledged'))throw Error('Wrong delivery status: '+message);
 if(!message.includes('Image send time:'))throw Error('Missing send timer');
-if(mode!=='auto'&&!message.includes(mode.slice(6)+' ms extra pause'))throw Error('Wrong stream pause');
 }
 if(!$('macPrinterPicker').hidden)throw Error('Printer picker stayed open after connection');
 progress('Block Mac queue for stop test');
 await new Promise(r=>setTimeout(r,100));
 $('print').click();
-await until(()=>$('printerStatus').textContent.includes('Waiting for Mac Bluetooth queue capacity'));
+await until(()=>$('printerStatus').textContent.includes('Confirming setup'));
 if($('stopTransfer').hidden||$('stopTransfer').disabled)throw Error('Stop transfer unavailable while stalled');
 $('stopTransfer').click();
 await until(()=>!window.RBGlazyLabelPrinter.isBusy);
@@ -94,8 +96,9 @@ class Delegate(NSObject):
         if 'stage' in result:
             print('WebKit: '+str(result['stage']),flush=True)
             if result['stage']=='Block Mac queue for stop test':
-                server.printer.can_send_without_response=lambda: False
-                server.printer.queue_timeout=20
+                async def blocked(*args, **kwargs):
+                    await asyncio.Event().wait()
+                server.printer.client.write_gatt_char=blocked
             return
         self.report(result)
     def timeout_(self, timer):
