@@ -3,7 +3,6 @@ on:
   push:
     paths:
       - 'mac-app-build/**'
-      - '.github/workflows/mac-label-helper.yml'
   workflow_dispatch:
 permissions:
   contents: read
@@ -15,8 +14,6 @@ jobs:
         include:
           - runner: macos-15
             arch: Apple-silicon
-          - runner: macos-15-intel
-            arch: Intel
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 25
     steps:
