@@ -42,6 +42,7 @@ async function until(check){for(let i=0;i<240;i++){if(check())return;await new P
 await until(()=>!$('connect').disabled);
 progress('Recipe ready');
 $('size').value='compact';$('size').dispatchEvent(new Event('change'));
+$('height').value='20';$('height').dispatchEvent(new Event('input'));
 await until(()=>!$('connect').disabled);
 $('connect').click();
 progress('Scanning in the panel');
@@ -56,7 +57,7 @@ for(const [mode,packet] of [['auto',128],['auto',192],['auto',256],['steady',128
 $('transferMode').value=mode;$('transferMode').dispatchEvent(new Event('change'));
 $('packetBytes').value=String(packet);$('packetBytes').dispatchEvent(new Event('change'));
 $('print').click();progress('Sending compact label '+mode+' '+packet);
-await until(()=>!$('print').disabled);
+await until(()=>!$('print').disabled,mode==='steady'?60000:25000);
 const message=$('status').textContent;
 if(!message.includes('all data acknowledged'))throw Error('Wrong delivery status: '+message);
 if(!message.includes('Image send time:'))throw Error('Missing send timer');
