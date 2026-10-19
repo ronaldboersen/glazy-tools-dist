@@ -1,1 +1,1 @@
-window.RB_GLAZY_COLOUR_BLEND_MANIFEST={"version":"1.1.1","script":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-colour-blend-v1.1.1.js","style":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-colour-blend-v1.1.1.css"};
+window.RB_GLAZY_COLOUR_BLEND_MANIFEST={"version":"1.2.0","script":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-colour-blend-v1.2.0.js","style":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-colour-blend-v1.2.0.css"};
