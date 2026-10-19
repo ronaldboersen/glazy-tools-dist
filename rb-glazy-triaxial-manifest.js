@@ -1,1 +1,0 @@
-window.RB_GLAZY_TRIAXIAL_MANIFEST={"version":"1.4.1","script":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-triaxial-v1.4.1.js","style":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-triaxial-v1.4.1.css"};
