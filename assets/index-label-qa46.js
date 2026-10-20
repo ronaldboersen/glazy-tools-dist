@@ -1,1 +1,0 @@
-export const labels={_ATMOSPHERES:{1:"Oxidation",2:"Neutral"}};
