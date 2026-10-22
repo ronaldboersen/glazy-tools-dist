@@ -1,1 +1,1 @@
-window.RB_PROTOTYPE_MANIFEST={"version":"melt-workbench-0.6.1","appVersion":"0.6.1","assets":[{"type":"css","src":"rb-glazy-melt-workbench-v0.6.1.css"},{"type":"js","src":"rb-glazy-melt-workbench-v0.6.1.js"}]};
+window.RB_PROTOTYPE_MANIFEST={"version":"melt-workbench-0.6.2","appVersion":"0.6.2","assets":[{"type":"css","src":"rb-glazy-melt-workbench-v0.6.2.css"},{"type":"js","src":"rb-glazy-melt-workbench-v0.6.2.js"}]};
