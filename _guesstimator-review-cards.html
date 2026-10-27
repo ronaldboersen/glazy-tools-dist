@@ -1,0 +1,774 @@
+<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{margin:0;background:#fafafa;color:#333;font:15px system-ui}main{margin:90px 5%;display:grid;grid-template-columns:1fr 384px;gap:24px}aside{background:#ddd;height:420px}article{background:#fff;margin:20px;padding:18px;border:1px solid #ddd;max-width:320px}h1{font-size:28px}.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:16px}.cards>[data-slot=card]{min-width:0;background:#fff;border:1px solid #ddd;border-radius:8px;padding:8px}.cards table{font-size:11px;width:100%}.cards [data-slot=card-title]{font-weight:600}.cards [data-slot=card-image]{height:100px;background:#eee}img{max-width:100%}@media(max-width:1023px){main{display:block}aside{display:none}}#rb-glaze-guesstimator,.rbgg-panel{box-sizing:border-box;font:13px/1.35 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#252525;color-scheme:light;background:#fff;border:1px solid #ccc;border-radius:9px;box-shadow:0 3px 22px #0002;z-index:2147483200}
+#rb-glaze-guesstimator{position:fixed;bottom:12px;right:12px;width:320px;max-height:calc(100dvh - 24px);overflow:auto}
+#rb-glaze-guesstimator *, .rbgg-panel *{box-sizing:border-box}
+#rb-glaze-guesstimator [hidden],.rbgg-panel[hidden],.rbgg-panel [hidden]{display:none!important}
+#rb-glaze-guesstimator h2{margin:0;min-width:0;font:650 19px/1.2 system-ui,-apple-system,sans-serif;letter-spacing:-.2px;color:#777;flex:1}
+#rb-glaze-guesstimator .rbgg-header{display:flex;align-items:center;gap:8px;background:#f4f4f4;padding:12px 17px;border-bottom:1px solid #e4e4e4;min-height:64px}
+#rb-glaze-guesstimator button,.rbgg-panel button{font:inherit;color:#696969;cursor:pointer;background:transparent;border:1px solid transparent;border-radius:8px;min-height:36px;min-width:36px;padding:4px}
+#rb-glaze-guesstimator [data-close],.rbgg-panel [data-dismiss]{font-size:23px;line-height:1}
+#rb-glaze-guesstimator button:hover,.rbgg-panel button:hover{background:#f0f0f0;color:#222}
+#rb-glaze-guesstimator button:focus-visible,#rb-glaze-guesstimator select:focus-visible,.rbgg-panel button:focus-visible,.rbgg-panel summary:focus-visible{outline:3px solid #0d47a1;outline-offset:2px}
+#rb-glaze-guesstimator .rbgg-firing{display:flex;align-items:center;justify-content:flex-start;gap:7px;padding:8px 15px;border-bottom:1px solid #ddd}
+#rb-glaze-guesstimator .rbgg-firing label{font-size:14px;font-weight:600;min-width:0}
+#rb-glaze-guesstimator select{font:600 14px/1.25 system-ui,-apple-system,sans-serif;color:#252525;background:#fff;border:1px solid #aaa;border-radius:5px;padding:5px 7px;min-height:32px;flex:none}
+.rbgg-panel{container-type:inline-size;container-name:rbgg-evaluator;padding:9px 15px 8px;width:100%;overflow:auto;overscroll-behavior:contain}
+#rb-glaze-guesstimator>.rbgg-panel{border:0;border-radius:0;box-shadow:none;background:transparent}
+#rb-glaze-guesstimator[data-mode=recipe] [data-dismiss]{display:none}
+.rbgg-panel .rbgg-results{display:grid;gap:7px}
+.rbgg-summary{font-size:14px;font-weight:700;color:#252525;margin:0 0 1px}
+.rbgg-reading{display:grid;grid-template-columns:minmax(0,1fr);row-gap:4px;border:1px solid #ddd;border-radius:6px;padding:8px;background:#fafafa}
+.rbgg-reading h3{font-size:14px;font-weight:700;color:#252525;margin:0}
+.rbgg-scale-group{min-width:0}
+.rbgg-labels{display:grid;gap:0;align-items:end;min-height:26px;margin-bottom:5px;font-size:10px;color:#666;line-height:1.15}
+.rbgg-labels span{min-width:0}
+.rbgg-labels-surface{grid-template-columns:30% 10% 60%;min-height:14px}
+.rbgg-labels-surface span:nth-child(2){text-align:center}
+.rbgg-labels span:last-child{text-align:right}
+.rbgg-labels-fluidity{display:grid;grid-template-columns:minmax(max-content,var(--rbgg-white,29.3546%)) minmax(max-content,1fr) max-content;gap:0;min-height:12px}
+.rbgg-labels-fluidity span{white-space:nowrap}
+.rbgg-labels-fluidity span:first-child,.rbgg-labels-fluidity span:nth-child(2){padding-right:4px;text-align:left}
+.rbgg-scale{height:12px;border:1px solid #999;border-radius:3px;position:relative;margin:0 1px}
+.rbgg-fluidity{background:linear-gradient(to right,#999 0%,#fff var(--rbgg-white,29.3546%),#999 100%)}
+.rbgg-surface{background:linear-gradient(to right,#fff 0%,#999 20%,#999 40%,#fff 100%)}
+.rbgg-hatch{position:absolute;left:0;top:0;bottom:0;width:25%;background:repeating-linear-gradient(135deg,transparent 0 3px,#555 3px 4px);border-radius:3px 0 0 3px}
+.rbgg-surface .rbgg-hatch{width:25%}
+.rbgg-marker{position:absolute;top:-4px;bottom:-4px;width:2px;background:#222;transform:translateX(-1px)}
+.rbgg-evaluation{display:block;min-width:0;color:#252525;font-style:italic}
+.rbgg-reading output{display:block;position:relative;left:0;width:max-content;max-width:100%;text-align:center;font-size:14px;font-weight:650;line-height:1.2;color:inherit;overflow-wrap:normal;word-break:normal;hyphens:none}
+.rbgg-reading output::first-letter{text-transform:uppercase}
+.rbgg-thickness{display:block;position:relative;left:0;width:max-content;max-width:100%;text-align:center;font-size:11px;color:inherit;font-weight:400;margin-top:2px}
+.rbgg-lowest{display:flex;align-items:center;gap:6px;font-size:12px;color:#666;padding-top:0;border-top:0}
+.rbgg-lowest output{font:inherit;color:inherit}
+.rbgg-prediction-header{display:flex;align-items:flex-start;gap:4px}
+.rbgg-prediction-header h3{flex:1;min-width:0}
+.rbgg-panel .rbgg-prediction-header [data-dismiss]{flex:none;min-width:26px;min-height:26px;padding:0;margin:-5px -9px 0 0}
+.rbgg-sanity{font-size:12px;line-height:1.3}
+.rbgg-sanity strong{font-weight:500}
+.rbgg-sanity span:not(:empty){color:#b71c1c}
+.rbgg-lead{color:#b71c1c;font-size:12px;margin:0}
+.rbgg-status{font-size:12px;color:#555;margin:7px 0}
+.rbgg-status[role=alert]{color:#b71c1c}
+.rbgg-panel[data-flag-tone=neutral] .rbgg-sanity span:not(:empty),.rbgg-panel[data-flag-tone=neutral] .rbgg-lead,.rbgg-panel[data-flag-tone=neutral] .rbgg-status[role=alert]{color:#252525}
+.rbgg-support{font-size:11px;margin:8px 15px 10px;padding-top:7px;border-top:1px solid #eee}
+.rbgg-support iframe{display:block;width:100%;height:310px;border:0;background:#fff}
+.rbgg-support summary,.rbgg-support a{color:#0d47a1}
+.rbgg-support summary{cursor:pointer;padding-block:3px}
+.rbgg-support p{margin:7px 0}
+.rbgg-panel:not(#rb-glaze-guesstimator *){position:fixed;z-index:2147483201}
+#rb-glaze-guesstimator.rbgg-narrow{bottom:0;left:0;right:0;width:100%;border-bottom:0;border-radius:9px 9px 0 0;max-height:75dvh;padding-bottom:env(safe-area-inset-bottom,0px)}
+#rb-glaze-guesstimator.rbgg-narrow .rbgg-header{padding:9px 13px;min-height:55px}
+#rb-glaze-guesstimator[data-mode=cards]{width:min(620px,calc(100vw - 24px))}
+#rb-glaze-guesstimator[data-mode=cards].rbgg-narrow{left:0;right:0;bottom:0;width:100%;border-bottom:0;border-radius:9px 9px 0 0}
+#rb-glaze-guesstimator[data-mode=cards] .rbgg-header{min-height:48px;padding:7px 9px;gap:6px}
+#rb-glaze-guesstimator[data-mode=cards] h2{font-size:14px}
+#rb-glaze-guesstimator[data-mode=cards] [data-close]{min-width:28px;min-height:28px}
+#rb-glaze-guesstimator[data-mode=cards] .rbgg-firing{display:block;border-bottom:0;padding:7px 13px;font-size:12px;line-height:1.8}
+#rb-glaze-guesstimator[data-mode=cards] .rbgg-firing label{font-size:inherit;font-weight:400}
+#rb-glaze-guesstimator[data-mode=cards] select{vertical-align:baseline;margin:2px 0}
+#rb-glaze-guesstimator.rbgg-collapsed .rbgg-header{border-bottom:0}
+[data-rbgg-selected]{outline:2px solid #555!important;outline-offset:-2px}
+@media(pointer:coarse){#rb-glaze-guesstimator button,.rbgg-panel button{min-height:44px;min-width:44px}.rbgg-panel .rbgg-prediction-header [data-dismiss]{min-width:32px;min-height:32px}}
+@media(min-width:1280px){#rb-glaze-guesstimator{width:384px}}
+@media(min-width:1536px){#rb-glaze-guesstimator{width:448px}}
+
+@media(max-width:360px){.rbgg-reading{column-gap:9px;padding:7px}}
+
+.rbgg-panel[data-corner=top-left]{border-top-left-radius:0}
+.rbgg-panel[data-corner=top-right]{border-top-right-radius:0}
+.rbgg-panel[data-corner=bottom-left]{border-bottom-left-radius:0}
+.rbgg-panel[data-corner=bottom-right]{border-bottom-right-radius:0}
+@media(pointer:coarse){#rb-glaze-guesstimator[data-mode=cards] [data-close]{min-width:44px;min-height:44px}}
+
+#rb-glaze-guesstimator[data-mode=cards] .rbgg-support summary{padding-right:0!important}
+#rb-glaze-guesstimator[data-mode=cards] .rb-glazy-version{position:static!important;display:block;transform:none!important;margin-top:2px}
+
+</style></head><body><nav style="background:#eee;padding:18px">Glazy layout fixture</nav><main style="display:block"><h1>Compare recipes</h1><div class="cards"><!-- Structural excerpt from Ronald’s Glazy Compare webarchive, 26 October 2026. Styling, images and SVGs omitted. -->
+<div data-slot="card" data-size="default" role="article" aria-labelledby="material-title-131996" aria-describedby="material-details-131996"><div data-slot="card-image"><div><div><div></div><span id="material-card-131996"></span><span data-slot="badge" data-variant="secondary">#131996</span></div><a aria-label="#131996 Lynette's Opal" href="/recipes/131996/lynettes-opal"></a><div><button type="button" role="checkbox" aria-checked="true" data-state="checked" value="on" data-slot="checkbox" id="material-checkbox-131996" aria-label="Select a material or recipe" aria-describedby="material-title-131996"><span data-state="checked" data-slot="checkbox-indicator"></span></button></div><a href="/recipes/131996/lynettes-opal" aria-label="Preview: #131996 Lynette's Opal" data-slot="tooltip-trigger" data-variant="default" data-size="icon-lg" data-state="closed"></a><div><button data-slot="popover-trigger" data-variant="ghost" data-size="icon-sm" type="button" aria-label="Save to collection" aria-haspopup="dialog" aria-expanded="false" data-state="closed"></button><button data-slot="dropdown-menu-trigger" data-variant="ghost" data-size="icon" aria-label="More actions" type="button" id="radix-_r_k5_" aria-haspopup="menu" aria-expanded="false" data-state="closed"></button></div></div></div><div data-slot="card-header"><div data-slot="card-title" id="material-title-131996"><span><a href="/recipes/131996/lynettes-opal"><span><span>Lynette's Opal</span></span></a></span></div><div id="material-details-131996"><div><span><span><span>6</span></span><span><span>Ox.</span></span></span><span aria-label="Status: Testing"><span>Testing</span></span></div><div><div data-state="closed" data-slot="tooltip-trigger"><span data-slot="badge" data-variant="outline" aria-label="Type: Rutile"><span>Rutile</span></span></div><div data-state="closed" data-slot="tooltip-trigger"><span data-slot="badge" data-variant="outline" aria-label="Surface: Glossy"><span>Glossy</span></span></div><div data-state="closed" data-slot="tooltip-trigger"><span data-slot="badge" data-variant="outline" aria-label="Transparency: Translucent"><span>Translucent</span></span></div><div data-state="closed" data-slot="tooltip-trigger"><span data-slot="badge" data-variant="outline" aria-label="Country: Belgium"><span>Belgium</span></span></div></div></div><div aria-label="4.8 out of 5 stars"><div role="img" aria-label="4.8 out of 5 stars"><span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span></div></div></div><div data-slot="card-content"><div><div data-slot="table-container"><table data-slot="table"><thead data-slot="table-header"><tr data-slot="table-row"><th data-slot="table-head">Ingredient</th><th data-slot="table-head">%</th></tr></thead><tbody data-slot="table-body"><tr data-slot="table-row"><td data-slot="table-cell"><div><span>Nepheline Syenite</span></div></td><td data-slot="table-cell">38</td></tr><tr data-slot="table-row"><td data-slot="table-cell"><div><span>Silica</span></div></td><td data-slot="table-cell">25</td></tr><tr data-slot="table-row"><td data-slot="table-cell"><div><span>Gerstley Borate</span></div></td><td data-slot="table-cell">10</td></tr><tr data-slot="table-row"><td data-slot="table-cell"><div><span>EP Kaolin</span></div></td><td data-slot="table-cell">8</td></tr><tr data-slot="table-row"><td data-slot="table-cell"><div><span>Whiting</span></div></td><td data-slot="table-cell">7</td></tr><tr data-slot="table-row"><td data-slot="table-cell"><div><span>Talc</span></div></td><td data-slot="table-cell">5</td></tr><tr data-slot="table-row"><td data-slot="table-cell"><div><span>Zinc Oxide</span></div></td><td data-slot="table-cell">5</td></tr><tr data-slot="table-row"><td data-slot="table-cell"><div><span>Wollastonite</span></div></td><td data-slot="table-cell">2</td></tr><tr data-slot="table-row"><td data-slot="table-cell"><div><span>Rutile</span></div></td><td data-slot="table-cell">8</td></tr><tr data-slot="table-row"><td data-slot="table-cell"><div><span>Bentonite</span></div></td><td data-slot="table-cell">2</td></tr><tr data-slot="table-row"><td data-slot="table-cell">Total</td><td data-slot="table-cell">110</td></tr></tbody></table></div></div><div data-orientation="horizontal" role="none" data-slot="separator"></div><div><div>UMF</div><div><div><div><div><span>0.21</span> <span><span>Na<sub>2</sub>O</span></span></div><div><span>0.06</span> <span><span>K<sub>2</sub>O</span></span></div><div><span>0.15</span> <span><span>MgO</span></span></div><div><span>0.39</span> <span><span>CaO</span></span></div><div><span>0.19</span> <span><span>ZnO</span></span></div></div><div></div><div><div><span>0.37</span> <span><span>Al<sub>2</sub>O<sub>3</sub></span></span></div><div><span>0.12</span> <span><span>B<sub>2</sub>O<sub>3</sub></span></span></div></div><div></div><div><div><span>2.99</span> <span><span>SiO<sub>2</sub></span></span></div><div><span>0.28</span> <span><span>TiO<sub>2</sub></span></span></div></div><div></div><div><div><span>~</span> <span><span>P<sub>2</sub>O<sub>5</sub></span></span></div><div><span>0.02</span> <span><span>Fe<sub>2</sub>O<sub>3</sub></span></span></div></div></div><div><div><span><span>R<sub>2</sub>O:RO</span></span><span data-slot="badge" data-variant="outline"><span data-slot="r2o-ro-ratio-value"><span>0.27</span><span>:</span><span>0.73</span></span></span></div><div><span><span>SiO<sub>2</sub>:Al<sub>2</sub>O<sub>3</sub></span></span><span data-slot="badge" data-variant="outline">8.05</span></div><div><span>Calculated Expansion</span><span data-slot="badge" data-variant="outline">7.73</span><span data-slot="badge" data-variant="outline">7.4 Molar</span></div></div></div></div></div><div data-slot="card-footer"><a aria-label="View Olivier Hermia's profile" href="/olivierhermia"><div><span data-slot="avatar" data-size="default"></span><div><div><span>Olivier Hermia</span></div></div></div></a></div></div><div data-slot="card" data-size="default" role="article" aria-labelledby="material-title-493943" aria-describedby="material-details-493943"><div data-slot="card-image"><div><div><div></div><span id="material-card-493943"></span><span data-slot="badge" data-variant="secondary">#493943</span></div><a aria-label="#493943 Periwinkle (c/6)" href="/recipes/493943/periwinkle-c6"></a><div><button type="button" role="checkbox" aria-checked="true" data-state="checked" value="on" data-slot="checkbox" id="material-checkbox-493943" aria-label="Select a material or recipe" aria-describedby="material-title-493943"><span data-state="checked" data-slot="checkbox-indicator"></span></button></div><a href="/recipes/493943/periwinkle-c6" aria-label="Preview: #493943 Periwinkle (c/6)" data-slot="tooltip-trigger" data-variant="default" data-size="icon-lg" data-state="closed"></a><div><button data-slot="popover-trigger" data-variant="ghost" data-size="icon-sm" type="button" aria-label="Save to collection" aria-haspopup="dialog" aria-expanded="false" data-state="closed"></button><button data-slot="dropdown-menu-trigger" data-variant="ghost" data-size="icon" aria-label="More actions" type="button" id="radix-_r_kn_" aria-haspopup="menu" aria-expanded="false" data-state="closed"></button></div></div></div><div data-slot="card-header"><div data-slot="card-title" id="material-title-493943"><span><a href="/recipes/493943/periwinkle-c6"><span><span>Periwinkle (c/6)</span></span></a></span></div><div id="material-details-493943"><div><span><span><span>06</span></span><span><span>Ox.</span></span></span><span aria-label="Status: Testing"><span>Testing</span></span></div><div><div data-state="closed" data-slot="tooltip-trigger"><span data-slot="badge" data-variant="outline" aria-label="Type: Glaze"><span>Glaze</span></span></div></div></div></div><div data-slot="card-content"><div><div data-slot="table-container"><table data-slot="table"><thead data-slot="table-header"><tr data-slot="table-row"><th data-slot="table-head">Ingredient</th><th data-slot="table-head">%</th></tr></thead><tbody data-slot="table-body"><tr data-slot="table-row"><td data-slot="table-cell"><div><span>Nepheline Syenite A270</span></div></td><td data-slot="table-cell">60</td></tr><tr data-slot="table-row"><td data-slot="table-cell"><div><span>Strontium Carbonate</span></div></td><td data-slot="table-cell">20</td></tr><tr data-slot="table-row"><td data-slot="table-cell"><div><span>Ball Clay</span></div></td><td data-slot="table-cell">10</td></tr><tr data-slot="table-row"><td data-slot="table-cell"><div><span>Silica</span></div></td><td data-slot="table-cell">9</td></tr><tr data-slot="table-row"><td data-slot="table-cell"><div><span>Copper Carbonate</span></div></td><td data-slot="table-cell">4</td></tr><tr data-slot="table-row"><td data-slot="table-cell"><div><span>Cobalt Carbonate</span></div></td><td data-slot="table-cell">0.15</td></tr><tr data-slot="table-row"><td data-slot="table-cell">Total</td><td data-slot="table-cell">103.15</td></tr></tbody></table></div></div><div data-orientation="horizontal" role="none" data-slot="separator"></div><div><div>UMF</div><div><div><div><div><span>0.37</span> <span><span>Na<sub>2</sub>O</span></span></div><div><span>0.12</span> <span><span>K<sub>2</sub>O</span></span></div><div><span>~</span> <span><span>MgO</span></span></div><div><span>0.02</span> <span><span>CaO</span></span></div><div><span>0.49</span> <span><span>SrO</span></span></div></div><div></div><div><div><span>0.6</span> <span><span>Al<sub>2</sub>O<sub>3</sub></span></span></div></div><div></div><div><div><span>3.09</span> <span><span>SiO<sub>2</sub></span></span></div><div><span>~</span> <span><span>TiO<sub>2</sub></span></span></div></div><div></div><div><div><span>~</span> <span><span>Fe<sub>2</sub>O<sub>3</sub></span></span></div><div><span>~</span> <span><span>CoO</span></span></div><div><span>0.12</span> <span><span>CuO</span></span></div></div></div><div><div><span><span>R<sub>2</sub>O:RO</span></span><span data-slot="badge" data-variant="outline"><span data-slot="r2o-ro-ratio-value"><span>0.49</span><span>:</span><span>0.51</span></span></span></div><div><span><span>SiO<sub>2</sub>:Al<sub>2</sub>O<sub>3</sub></span></span><span data-slot="badge" data-variant="outline">5.2</span></div><div><span>Calculated Expansion</span><span data-slot="badge" data-variant="outline">8.66</span><span data-slot="badge" data-variant="outline">8.19 Molar</span></div></div></div></div></div><div data-slot="card-footer"><a aria-label="View Harvard Ceramics's profile" href="/harvardceramics"><div><span data-slot="avatar" data-size="default"></span><div><div><span>Harvard Ceramics</span></div></div></div></a></div></div>
+</div></main><script>window.fetch=async url=>({ok:true,json:async()=>({data:{...{"id":482013,"parentId":null,"parent":null,"children":[],"siblings":[],"revisionParentId":null,"revisionParent":null,"revisionChildren":[],"name":"DCP (NZ) - B1","slug":"dcp-nz-b1","otherNames":null,"formula":null,"description":"<p>Survived the basic leach test in acid well.</p>","descriptionSource":"<p>Survived the basic leach test in acid well.</p>","isAnalysis":false,"isPrimitive":false,"isArchived":false,"isUserMaterial":false,"locale":"en","materialStateId":1,"materialTypeId":460,"baseTypeId":460,"fromOrtonConeId":30,"toOrtonConeId":30,"surfaceTypeId":1,"transparencyTypeId":1,"countryId":171,"kilnSchedule":null,"waterAmount":null,"specificGravity":null,"ratingTotal":0,"ratingNumber":0,"ratingAverage":0,"isPrivate":false,"privacy":"public","userId":1869,"createdAt":"2024-06-04T08:04:39Z","createdAtDiff":"2 years ago","updatedAt":"2026-09-27T23:49:01Z","updatedAtDiff":"2 weeks ago","components":[{"amount":32.9,"isAdd":false,"material":{"id":85635,"name":"Nepheline Syenite Spectrum N45","isAnalysis":false,"isPrimitive":true,"isPrivate":false,"isArchived":true,"materialStateId":2,"analysis":{"SiO2":55.4,"Al2O3":24.6,"Na2O":8.1,"K2O":8.8,"CaO":1.1,"TiO2":0.07,"Fe2O3":0.1,"loi":0,"thermalExpansion":9.9029,"weight":0,"oxideWeight":402.7858},"image":null}},{"amount":21.47,"isAdd":false,"material":{"id":87859,"name":"China Clay Ultrafine","isAnalysis":false,"isPrimitive":true,"isPrivate":false,"isArchived":false,"materialStateId":1,"analysis":{"SiO2":49.4,"Al2O3":35.4,"Na2O":0.03,"K2O":0.01,"MgO":0.01,"CaO":0.01,"TiO2":0.07,"Fe2O3":0.3,"loi":13.9,"thermalExpansion":4.7207,"weight":285.1151,"oxideWeight":245.4841},"image":{"id":30809,"materialId":87859,"title":"20Kg Bag","cdnId":"/recipes/59/l_87859.5f97f770bacdf.jpg","userId":3035,"createdAtDiff":"5 years ago"}}},{"amount":18.82,"isAdd":false,"material":{"id":15457,"name":"Whiting","isAnalysis":false,"isPrimitive":true,"isPrivate":false,"isArchived":true,"materialStateId":2,"analysis":{"CaO":56.1,"loi":43.9,"thermalExpansion":14.8,"weight":99.959,"oxideWeight":56.077},"image":{"id":16835,"materialId":15457,"title":null,"cdnId":"/recipes/57/l_15457.5de7d47035ff4.jpg","userId":7,"createdAtDiff":"6 years ago"}}},{"amount":13.88,"isAdd":false,"material":{"id":15400,"name":"Silica","isAnalysis":false,"isPrimitive":true,"isPrivate":false,"isArchived":true,"materialStateId":2,"analysis":{"SiO2":100,"loi":0,"thermalExpansion":3.5,"weight":60.1,"oxideWeight":60.0844},"image":{"id":4900,"materialId":15400,"title":"","cdnId":"/recipes/00/l_15400.5a6a6c135b2e7.jpg","userId":1,"createdAtDiff":"8 years ago"}}},{"amount":12.93,"isAdd":false,"material":{"id":15252,"name":"Gerstley Borate","isAnalysis":false,"isPrimitive":true,"isPrivate":false,"isArchived":true,"materialStateId":2,"analysis":{"SiO2":14.799,"Al2O3":1.0023,"B2O3":26.7994,"Na2O":4.0006,"K2O":0.4016,"MgO":3.4991,"CaO":19.3978,"P2O5":0.0997,"TiO2":0.1001,"Fe2O3":0.4004,"loi":29.5,"thermalExpansion":8.68,"weight":140.6,"oxideWeight":140.5683},"image":{"id":4954,"materialId":15252,"title":"","cdnId":"/recipes/52/l_15252.5a6ba332a34ef.jpg","userId":1,"createdAtDiff":"8 years ago"}}},{"amount":2,"isAdd":true,"material":{"id":15072,"name":"Bentonite","isAnalysis":false,"isPrimitive":true,"isPrivate":false,"isArchived":true,"materialStateId":2,"analysis":{"SiO2":59.3295,"Al2O3":20.1153,"Na2O":3.0194,"K2O":1.0064,"MgO":2.0096,"CaO":1.0057,"Fe2O3":3.514,"loi":10,"thermalExpansion":6.0953,"weight":0,"oxideWeight":707.5601},"image":{"id":4882,"materialId":15072,"title":"","cdnId":"/recipes/72/l_15072.5a6a6a3c01481.jpg","userId":1,"createdAtDiff":"8 years ago"}}},{"amount":2,"isAdd":true,"material":{"id":15393,"name":"Rutile","isAnalysis":false,"isPrimitive":true,"isPrivate":false,"isArchived":true,"materialStateId":2,"analysis":{"TiO2":90.0024,"Fe2O3":9.8976,"loi":0.1,"thermalExpansion":14.21,"weight":88.866,"oxideWeight":88.6489},"image":{"id":4978,"materialId":15393,"title":"","cdnId":"/recipes/93/l_15393.5a6ba51a8dd00.jpg","userId":1,"createdAtDiff":"8 years ago"}}},{"amount":2,"isAdd":true,"material":{"id":15443,"name":"Titanium Dioxide","isAnalysis":false,"isPrimitive":true,"isPrivate":false,"isArchived":true,"materialStateId":2,"analysis":{"TiO2":100,"loi":0,"thermalExpansion":14.4,"weight":79.9,"oxideWeight":79.866},"image":{"id":4907,"materialId":15443,"title":"","cdnId":"/recipes/43/l_15443.5a6a6cb5725e7.jpg","userId":1,"createdAtDiff":"8 years ago"}}},{"amount":1,"isAdd":true,"material":{"id":15117,"name":"Cobalt Oxide","isAnalysis":false,"isPrimitive":true,"isPrivate":false,"isArchived":true,"materialStateId":2,"analysis":{"CoO":93.35,"loi":6.65,"thermalExpansion":0,"weight":74.92,"oxideWeight":74.9326},"image":{"id":16811,"materialId":15117,"title":null,"cdnId":"/recipes/17/l_15117.5de7cc1c61076.jpg","userId":7,"createdAtDiff":"6 years ago"}}}],"componentTotalAmount":107,"atmospheres":[1,2],"analysis":{"SiO2":42.8158,"Al2O3":15.1642,"B2O3":3.2385,"Na2O":3.0365,"K2O":2.7751,"MgO":0.4624,"CaO":12.5704,"P2O5":0.012,"TiO2":3.5991,"Fe2O3":0.39,"CoO":0.8724,"loi":14.3263,"thermalExpansion":8.3444,"weight":0,"oxideWeight":0},"images":[{"id":137152,"materialId":482013,"title":null,"description":"","cdnId":"/recipes/13/l_482013.665ee4216b13f.jpg","ortonConeId":30,"atmosphereId":1,"isColorSearchable":true,"dominantHexColor":"929596","secondaryHexColor":"4b5259","isPrivate":false,"user":{"id":1869,"name":"Ronald Boersen","description":null,"username":"ronaldboersen","cdnId":"/profiles/34/l_5034.609de2247ff7f.jpg","countryId":null,"countryName":null,"url":"ronaldboersen.com","pinterest":null,"facebook":"ronald.boersen","instagram":"ronaldboersen","artaxis":null,"paypal":"https://www.paypal.com/ncp/payment/ZVFLRPNHX24QQ","title":"I'm a potter, ceramic artist, glaze nerd, and educator, exploring the materiality of clay — freezing a moment in fire.","location":null,"isPatron":true,"isAlchemist":true,"createdAt":"2016-11-03T13:31:14Z","updatedAt":"2026-10-09T12:47:53Z"},"userId":1869,"createdAtDiff":"2 years ago","updatedAtDiff":"2 years ago","descriptionSource":null},{"id":137153,"materialId":482013,"title":null,"description":"","cdnId":"/recipes/13/l_482013.665ee4283f97c.jpg","ortonConeId":30,"atmosphereId":1,"isColorSearchable":true,"dominantHexColor":"929494","secondaryHexColor":"4a5158","isPrivate":false,"user":{"id":1869,"name":"Ronald Boersen","description":null,"username":"ronaldboersen","cdnId":"/profiles/34/l_5034.609de2247ff7f.jpg","countryId":null,"countryName":null,"url":"ronaldboersen.com","pinterest":null,"facebook":"ronald.boersen","instagram":"ronaldboersen","artaxis":null,"paypal":"https://www.paypal.com/ncp/payment/ZVFLRPNHX24QQ","title":"I'm a potter, ceramic artist, glaze nerd, and educator, exploring the materiality of clay — freezing a moment in fire.","location":null,"isPatron":true,"isAlchemist":true,"createdAt":"2016-11-03T13:31:14Z","updatedAt":"2026-10-09T12:47:53Z"},"userId":1869,"createdAtDiff":"2 years ago","updatedAtDiff":"2 years ago","descriptionSource":null}],"image":{"id":137152,"materialId":482013,"title":null,"description":"","cdnId":"/recipes/13/l_482013.665ee4216b13f.jpg","ortonConeId":30,"atmosphereId":1,"isColorSearchable":true,"dominantHexColor":"929596","secondaryHexColor":"4b5259","isPrivate":false,"user":{"id":1869,"name":"Ronald Boersen","description":null,"username":"ronaldboersen","cdnId":"/profiles/34/l_5034.609de2247ff7f.jpg","countryId":null,"countryName":null,"url":"ronaldboersen.com","pinterest":null,"facebook":"ronald.boersen","instagram":"ronaldboersen","artaxis":null,"paypal":"https://www.paypal.com/ncp/payment/ZVFLRPNHX24QQ","title":"I'm a potter, ceramic artist, glaze nerd, and educator, exploring the materiality of clay — freezing a moment in fire.","location":null,"isPatron":true,"isAlchemist":true,"createdAt":"2016-11-03T13:31:14Z","updatedAt":"2026-10-09T12:47:53Z"},"userId":1869,"createdAtDiff":"2 years ago","updatedAtDiff":"2 years ago","descriptionSource":null},"reviews":[],"comments":[{"id":22957,"parentId":null,"materialId":482013,"userId":65074,"content":"<p>all of my test tiles came out blue, no clue why. I followed the recipe to the T. Any thoughts?</p>","contentSource":"all of my test tiles came out blue, no clue why. I followed the recipe to the T. Any thoughts? ","cdnId":"/materialcomments/13/l_482013.667dbad0e5a5c.jpg","user":{"id":65074,"name":"Matthew","description":null,"isPatron":false,"isAlchemist":false,"createdAt":"2024-06-12T03:25:26Z","updatedAt":"2026-07-21T16:02:14Z"},"createdAt":"2024-06-27T19:17:37Z","createdAtDiff":"2 years ago","updatedAt":"2024-06-27T19:17:37Z","updatedAtDiff":"2 years ago"},{"id":22960,"parentId":22957,"materialId":482013,"userId":1869,"content":"<p>Matthew… well, it is supposed to be a blue glaze 😉 but it does seem your glaze contains a wee bit more cobalt. Perhaps your scale doesn’t quite have 0.1g or 0.01g accuracy, which would make it hard to measure 1 gram… though I would just try a bit less cobalt or cobalt carbonate instead.<br />\nTo properly identify the difference I would need a lot more information to be honest (particularly regarding your location and available materials, your scale, and what clays you used)<br />\nThat said, I do actually LOVE your results 🤩 Feel free to add it to the pictures for this recipe.</p>","contentSource":"Matthew… well, it is supposed to be a blue glaze 😉 but it does seem your glaze contains a wee bit more cobalt. Perhaps your scale doesn’t quite have 0.1g or 0.01g accuracy, which would make it hard to measure 1 gram… though I would just try a bit less cobalt or cobalt carbonate instead. \r\nTo properly identify the difference I would need a lot more information to be honest (particularly regarding your location and available materials, your scale, and what clays you used)\r\nThat said, I do actually LOVE your results 🤩 Feel free to add it to the pictures for this recipe. ","user":{"id":1869,"name":"Ronald Boersen","description":null,"username":"ronaldboersen","cdnId":"/profiles/34/l_5034.609de2247ff7f.jpg","countryId":null,"countryName":null,"url":"ronaldboersen.com","pinterest":null,"facebook":"ronald.boersen","instagram":"ronaldboersen","artaxis":null,"paypal":"https://www.paypal.com/ncp/payment/ZVFLRPNHX24QQ","title":"I'm a potter, ceramic artist, glaze nerd, and educator, exploring the materiality of clay — freezing a moment in fire.","location":null,"isPatron":true,"isAlchemist":true,"createdAt":"2016-11-03T13:31:14Z","updatedAt":"2026-10-09T12:47:53Z"},"createdAt":"2024-06-28T03:27:58Z","createdAtDiff":"2 years ago","updatedAt":"2024-06-28T03:27:58Z","updatedAtDiff":"2 years ago"},{"id":23099,"parentId":22957,"materialId":482013,"userId":65074,"content":"<p>Ronald Boersen, ahhh, hahah okay thank you very much. That could be the answer. I'll run another test!</p>\n<p>Thanks for getting back to me :)</p>","contentSource":"Ronald Boersen, ahhh, hahah okay thank you very much. That could be the answer. I'll run another test! \n\nThanks for getting back to me :)","user":{"id":65074,"name":"Matthew","description":null,"isPatron":false,"isAlchemist":false,"createdAt":"2024-06-12T03:25:26Z","updatedAt":"2026-07-21T16:02:14Z"},"createdAt":"2024-07-12T19:10:45Z","createdAtDiff":"2 years ago","updatedAt":"2024-07-12T19:10:45Z","updatedAtDiff":"2 years ago"}],"translations":[{"id":1511295,"name":"DCP (NZ) - B1","other_names":null,"description":"<p>Survived the basic leach test in acid well.</p>","descriptionSource":"<p>Survived the basic leach test in acid well.</p>","locale":"en"}],"user":{"id":1869,"name":"Ronald Boersen","description":null,"username":"ronaldboersen","cdnId":"/profiles/34/l_5034.609de2247ff7f.jpg","countryId":null,"countryName":null,"url":"ronaldboersen.com","pinterest":null,"facebook":"ronald.boersen","instagram":"ronaldboersen","artaxis":null,"paypal":"https://www.paypal.com/ncp/payment/ZVFLRPNHX24QQ","title":"I'm a potter, ceramic artist, glaze nerd, and educator, exploring the materiality of clay — freezing a moment in fire.","location":null,"isPatron":true,"isAlchemist":true,"createdAt":"2016-11-03T13:31:14Z","updatedAt":"2026-10-09T12:47:53Z"}},id:Number(url.split('/').pop()),name:'DCP (NZ) - B1'}})});</script><script>/* Family header signature. Use the original PNGs without processing or recolouring.
+ * Bundled privately into each plugin: no extra runtime script or shared global.
+ * Existing light panels keep black artwork even when Glazy itself is dark.
+ * Theme-aware panels opt into Glazy's existing light/dark root class only.
+ */
+function RBGlazyBrandHeader(heading, followGlazyTheme) {
+  if (heading.querySelector('.rb-glazy-header-emblem')) return function () {};
+  var image = document.createElement('img');
+  image.className = 'rb-glazy-header-emblem';
+  image.alt = ''; image.setAttribute('aria-hidden', 'true'); image.draggable = false;
+  image.width = 495; image.height = 578;
+  image.style.cssText = 'height:30px;width:auto;max-width:none;flex:none;object-fit:contain;margin:0;border:0;background:transparent;box-shadow:none;';
+  // Keep the existing heading, ID, text, fonts, margins and surrounding controls.
+  // A text span allows a narrow header title to wrap without stretching the image.
+  var text = document.createElement('span');
+  while (heading.firstChild) text.appendChild(heading.firstChild);
+  heading.style.display = 'flex'; heading.style.alignItems = 'center'; heading.style.gap = '8px';
+  heading.append(image, text);
+  var base = 'https://ronaldboersen.github.io/glazy-tools-dist/assets/';
+  function update() {
+    var dark = followGlazyTheme && (document.documentElement.classList.contains('dark') || document.body.classList.contains('dark'));
+    var url = base + 'RonaldBoersen_Pottery_LOGO_emblem' + (dark ? 'White' : 'Black') + '.png';
+    if (image.getAttribute('src') !== url) image.src = url;
+  }
+  update();
+  if (!followGlazyTheme) return function () {};
+  var observer = new MutationObserver(update);
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+  observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+  // The existing shell calls this during teardown; no theme listener survives it.
+  return function () { observer.disconnect(); };
+}
+
+/* Quiet family release label, beside the existing support summary.
+ * Bundled with the header helpers; no extra global, asset or listener is needed.
+ * Keep the native disclosure marker and click/keyboard behaviour intact.
+ */
+function RBGlazyVersionFooter(support, version) {
+  var summary = support && support.querySelector('summary');
+  if (!summary) return;
+  var label = summary.querySelector('.rb-glazy-version');
+  if (!label) {
+    label = document.createElement('span');
+    label.className = 'rb-glazy-version';
+    label.style.cssText = 'position:absolute;right:0;top:50%;transform:translateY(-50%);font:normal 11px/1.4 system-ui,-apple-system,sans-serif;color:#777;white-space:nowrap;pointer-events:none;';
+    summary.style.position = 'relative';
+    summary.style.paddingRight = '100px';
+    summary.appendChild(label);
+  }
+  label.textContent = 'v' + version + ' · Beta';
+}
+
+
+(() => {
+  // plugins/melt-workbench/surface.mjs
+  var SILICA_OFFSET = 1.6 / 8.62;
+  var SURFACE_DEFAULTS = Object.freeze({ surfaceStart: 0, surfaceGain: 1, surfaceScaleMultiplier: 1, surfaceOtherAlEdge: 3, surfaceMgZnAlEdge: 0, surfaceOtherSiBoundary: 8.62, surfaceMgSiBoundary: 3, surfaceWidthMultiplier: 1, surfaceFluiditySpan: 5, surfaceMgScale: 14, surfaceCaScale: 12, surfaceSrScale: 10, surfaceBaScale: 9, surfaceZnScale: 9, surfaceMgWidth: 1, surfaceCaWidth: 1.5, surfaceSrWidth: 2, surfaceBaWidth: 2, surfaceZnWidth: 1 });
+  function validateSurfaceParameters(p) {
+    if (Object.keys(SURFACE_DEFAULTS).some((k) => !Number.isFinite(p[k]))) throw Error("Enter a finite value for every surface parameter.");
+    if (p.surfaceStart !== 0 && p.surfaceStart !== 1) throw Error("The linear surface origin must be 0 or 1.");
+    if (p.surfaceGain < 0) throw Error("The surface slope multiplier cannot be negative.");
+    if (["surfaceScaleMultiplier", "surfaceWidthMultiplier", "surfaceFluiditySpan", ...["Mg", "Ca", "Sr", "Ba", "Zn"].flatMap((k) => ["surface" + k + "Scale", "surface" + k + "Width"])].some((k) => p[k] <= 0)) throw Error("Surface ratio scale, shared edge width and fluidity interval must be greater than zero.");
+    if (p.surfaceOtherAlEdge < 0 || p.surfaceMgZnAlEdge < 0 || p.surfaceOtherSiBoundary < 0 || p.surfaceMgSiBoundary < 0) throw Error("Surface edge ratios cannot be negative.");
+  }
+  function resolveSurfaceParameters(x, p) {
+    const roKeys = ["MgO", "CaO", "SrO", "BaO", "ZnO", "PbO"], roTotal = roKeys.reduce((sum, k) => sum + (x[k] || 0), 0);
+    const fractions = Object.fromEntries(roKeys.map((k) => [k, roTotal > 0 ? (x[k] || 0) / roTotal : 0]));
+    let baseScale = roTotal > 0 ? 12 * fractions.PbO : 12, baseWidth = roTotal > 0 ? fractions.PbO : 1;
+    for (const k of ["Mg", "Ca", "Sr", "Ba", "Zn"]) {
+      baseScale += fractions[k + "O"] * p["surface" + k + "Scale"];
+      baseWidth += fractions[k + "O"] * p["surface" + k + "Width"];
+    }
+    const silicaCentre = roTotal > 0 ? fractions.MgO * p.surfaceMgSiBoundary + (1 - fractions.MgO) * p.surfaceOtherSiBoundary : p.surfaceOtherSiBoundary;
+    const mgZnFraction = fractions.MgO + fractions.ZnO, aluminaCentre = roTotal > 0 ? mgZnFraction * p.surfaceMgZnAlEdge + (1 - mgZnFraction) * p.surfaceOtherAlEdge : p.surfaceOtherAlEdge;
+    return { ...p, surfaceAlEdge: aluminaCentre, surfaceSiBoundary: silicaCentre, surfaceScale: baseScale * p.surfaceScaleMultiplier, surfaceWidth: baseWidth * p.surfaceWidthMultiplier, surfaceBaseScale: baseScale, surfaceBaseWidth: baseWidth, surfaceROFractions: fractions };
+  }
+  var sigmoid = (z) => z >= 0 ? 1 / (1 + Math.exp(-z)) : Math.exp(z) / (1 + Math.exp(z));
+  var softplus = (z) => Math.max(0, z) + Math.log1p(Math.exp(-Math.abs(z)));
+  function surfaceRatioTerms(r, p, aluminaLevel) {
+    if (!Number.isFinite(r) || r < p.surfaceStart) return { available: false, ratio: r, reason: r == null || r === Infinity ? "SiO\u2082:Al\u2082O\u2083 is undefined without positive alumina." : "The ratio is below the configured linear origin." };
+    if (!Number.isFinite(aluminaLevel) || aluminaLevel <= 0) return { available: false, ratio: r, reason: "The ratio sweep requires a positive fixed Al\u2082O\u2083 UMF level." };
+    const silicaRatio = r * aluminaLevel / (aluminaLevel + SILICA_OFFSET);
+    const linear = p.surfaceGain * (r - p.surfaceStart) / p.surfaceScale;
+    const alZ = (r - p.surfaceAlEdge) / p.surfaceWidth, siZ = (p.surfaceSiBoundary - silicaRatio) / p.surfaceWidth;
+    const alumina = sigmoid(alZ), silica = sigmoid(siZ);
+    const logBase = linear === 0 ? -Infinity : Math.log(linear) - softplus(-alZ) - softplus(-siZ);
+    return { available: true, ratio: r, silicaRatio, linear, alumina, silica, base: Math.exp(logBase), logBase };
+  }
+  var surfaceFluidityGain = (F, p = SURFACE_DEFAULTS) => 2 ** (F / p.surfaceFluiditySpan);
+  function surfaceLabel(value) {
+    if (value < 0.2) return "dry";
+    if (value < 0.4) return "matte";
+    if (value < 0.5) return "matte to glossy";
+    if (value < 0.6) return "glossy to matte";
+    if (value < 0.8) return "glossy";
+    return "high gloss";
+  }
+  function surfaceAtRatio(r, F, p, aluminaLevel) {
+    const terms = surfaceRatioTerms(r, p, aluminaLevel);
+    if (!terms.available) return terms;
+    const fluidityGain = surfaceFluidityGain(F, p), value = Math.exp(terms.logBase + Math.LN2 * F / p.surfaceFluiditySpan);
+    return Number.isFinite(value) ? { ...terms, fluidityGain, value } : { ...terms, available: false, fluidityGain, reason: "Surface response exceeds the numerical range." };
+  }
+  function evaluateSurface(x, p, F) {
+    const ratio = x.Al2O3 > 0 ? x.SiO2 / x.Al2O3 : x.SiO2 > 0 ? Infinity : null;
+    const resolved = resolveSurfaceParameters(x, p);
+    return { ...surfaceAtRatio(ratio, F, resolved, x.Al2O3), riseDenominator: resolved.surfaceScale, edgeWidth: resolved.surfaceWidth, baseDenominator: resolved.surfaceBaseScale, baseWidth: resolved.surfaceBaseWidth, silicaCentre: resolved.surfaceSiBoundary, aluminaCentre: resolved.surfaceAlEdge };
+  }
+
+  // plugins/melt-workbench/model.mjs
+  var OXIDES = ["K2O", "Na2O", "Li2O", "CaO", "MgO", "ZnO", "SrO", "BaO", "PbO", "Al2O3", "B2O3", "SiO2"];
+  var DEFAULTS = Object.freeze({ anchor: 10, siReference: 4, alReference: 0.4, siSlope: 0.5, alSlope: 5, rReference: 0.2, rSlope: 10 / 3, kOffset: 0, naOffset: 1, liOffset: 2, boronSlope: 28, pairTarget: 0.2, bristolStrength: 4, activationStart: 4, activationEnd: 5, mgMultiplier: 0.5, znMultiplier: 0.5, srMultiplier: 1.5, baMultiplier: 1.8, ...SURFACE_DEFAULTS });
+  var BENCHMARK = Object.freeze({ K2O: 0.2, Na2O: 0, Li2O: 0, CaO: 0.8, MgO: 0, ZnO: 0, SrO: 0, BaO: 0, PbO: 0, Al2O3: 0.4, B2O3: 0, SiO2: 4 });
+  var FLUXES = OXIDES.slice(0, 9);
+  var clamp = (n, a, b) => Math.max(a, Math.min(b, n));
+  function fluidityLabel(value) {
+    if (!Number.isFinite(value)) return "\u2014";
+    if (value < -5) return "underfired";
+    if (value < -2) return "partly fused";
+    if (value < 0) return "underdeveloped";
+    if (value < 1) return "stiff";
+    if (value < 1.5) return "stiff to fluid";
+    if (value < 2.5) return "fluid";
+    if (value < 3.5) return "fluid to runny";
+    if (value < 5) return "runny";
+    if (value < 8) return "very runny";
+    return "excessively runny";
+  }
+  function coneLabel(h) {
+    if (!Number.isFinite(h)) return "\u2014";
+    const exact = (n) => n >= 1 ? String(n) : "0" + String(1 - n);
+    const nearest = Math.round(h);
+    if (Math.abs(h - nearest) < 0.025) return "\u0394" + exact(nearest);
+    const lo = Math.floor(h), hi = Math.ceil(h);
+    return "\u0394" + exact(lo) + "\u2013" + exact(hi);
+  }
+  function validateParameters(p) {
+    if (Object.values(DEFAULTS).length !== Object.keys(DEFAULTS).filter((k) => Number.isFinite(p[k])).length) throw Error("Enter a finite value for every model parameter.");
+    if (p.pairTarget <= 0) throw Error("Bristol pair target must be greater than zero.");
+    if (p.activationEnd <= p.activationStart) throw Error("Full activation must be hotter than activation onset.");
+    if (p.bristolStrength < 0) throw Error("Bristol strength cannot be negative.");
+    if (["mgMultiplier", "znMultiplier", "srMultiplier", "baMultiplier"].some((k) => p[k] <= 0)) throw Error("RO fluidity multipliers must be greater than zero.");
+    validateSurfaceParameters(p);
+  }
+  function chemistryValues(input) {
+    const x = Object.fromEntries(OXIDES.map((k) => [k, Number(input[k] ?? 0)]));
+    if (Object.values(x).some((v) => !Number.isFinite(v) || v < 0)) throw Error("UMF values must be finite and non-negative.");
+    return x;
+  }
+  function evaluateTerms(x, p = DEFAULTS, h = 6) {
+    const r = x.K2O + x.Na2O + x.Li2O;
+    const fractions = r > 0 ? { k: x.K2O / r, na: x.Na2O / r, li: x.Li2O / r } : { k: 0, na: 0, li: 0 };
+    const si = p.siSlope * (x.SiO2 - p.siReference), al = p.alSlope * (x.Al2O3 - p.alReference);
+    const rShift = -p.rSlope * (r - p.rReference);
+    const kShift = -p.kOffset * fractions.k, naShift = -p.naOffset * fractions.na, liShift = -p.liOffset * fractions.li;
+    const c0 = p.anchor + si + al + rShift + kShift + naShift + liShift;
+    const boron = -p.boronSlope * x.B2O3, cb = c0 + boron;
+    const earth = x.CaO + x.SrO + x.BaO, pair = Math.min(x.ZnO, earth), pairRatio = pair / p.pairTarget;
+    const activation = clamp((h - p.activationStart) / (p.activationEnd - p.activationStart), 0, 1);
+    const ordinary = h - cb, bristol = p.bristolStrength * pairRatio * activation;
+    const ro = x.CaO + x.MgO + x.ZnO + x.SrO + x.BaO + x.PbO;
+    const roFractions = Object.fromEntries(["CaO", "MgO", "ZnO", "SrO", "BaO", "PbO"].map((k) => [k, ro > 0 ? x[k] / ro : 0]));
+    const roMultiplier = ro > 0 ? roFractions.CaO + roFractions.PbO + p.mgMultiplier * roFractions.MgO + p.znMultiplier * roFractions.ZnO + p.srMultiplier * roFractions.SrO + p.baMultiplier * roFractions.BaO : 1;
+    const rawF = ordinary + bristol, F = roMultiplier * rawF;
+    return { r, fractions, si, al, rShift, kShift, naShift, liShift, c0, boron, cb, earth, pair, pairRatio, activation, ordinary, bristol, ro, roFractions, roMultiplier, rawF, roAdjustment: F - rawF, F };
+  }
+  function dissolution(x, p) {
+    const t = evaluateTerms(x, p, 0), maxBristol = p.bristolStrength * t.pairRatio;
+    let lo = Math.min(t.cb - maxBristol, p.activationStart) - 1, hi = Math.max(t.cb, p.activationEnd) + 1;
+    for (let i = 0; i < 64; i++) {
+      const mid = (lo + hi) / 2;
+      if (evaluateTerms(x, p, mid).rawF >= 0) hi = mid;
+      else lo = mid;
+    }
+    return (lo + hi) / 2;
+  }
+  function evaluate(input, p = DEFAULTS, h = 6) {
+    validateParameters(p);
+    const x = chemistryValues(input);
+    if (!Number.isFinite(h)) throw Error("Choose a valid firing cone.");
+    const terms = evaluateTerms(x, p, h);
+    return { ...terms, dissolution: dissolution(x, p), surface: evaluateSurface(x, p, terms.F) };
+  }
+
+  // plugins/label-printer/glazy-native.mjs
+  async function nativeChemistry() {
+    return { calculate: () => ({ "SiO2": 2.2687875849918835, "Al2O3": 0.4735166688953343, "B2O3": 0.14809851648357333, "Na2O": 0.15598411066415863, "K2O": 0.09379882027322568, "MgO": 0.03652715315917139, "CaO": 0.7136899159034444, "P2O5": 2691620337223867e-19, "TiO2": 0.143477370924828, "Fe2O3": 0.007775742174537694, "CoO": 0.03706774027958056, "SiO2Al2O3Ratio": 4.791357377734414, "RO2R2O3Ratio": 5.094361221843104, "hasAdditionalR2O3Oxides": false, "R2OTotal": 0.2497829309373843, "ROTotal": 0.7502170690626159 }) };
+  }
+
+  // plugins/substitution-tool/solver-v2/classification.mjs
+  var MOLAR_MASS = Object.freeze({
+    SiO2: 60.08439,
+    Al2O3: 101.96137,
+    B2O3: 69.6217,
+    Li2O: 29.8818,
+    Na2O: 61.97897,
+    K2O: 94.19605,
+    BeO: 25.01158,
+    MgO: 40.30449,
+    CaO: 56.0778,
+    SrO: 103.6204,
+    BaO: 153.3271,
+    P2O5: 141.9446,
+    TiO2: 79.866,
+    ZrO: 107.2234,
+    ZrO2: 123.2231,
+    V2O5: 181.88,
+    Cr2O3: 151.99061,
+    MnO: 70.93748,
+    MnO2: 86.93691,
+    FeO: 71.8446,
+    Fe2O3: 159.6887,
+    Fe3O4: 231.5333,
+    CoO: 74.93263,
+    NiO: 74.69287,
+    CuO: 79.5454,
+    Cu2O: 143.0914,
+    CdO: 128.4104,
+    ZnO: 81.3814,
+    PbO: 223.2094,
+    SnO2: 150.7096
+  });
+  var ALKALIS = ["K2O", "Na2O", "Li2O"];
+  var EARTHS = ["MgO", "CaO", "SrO", "BaO", "ZnO"];
+  var FLUXES2 = [...ALKALIS, "BeO", ...EARTHS, "PbO"];
+
+  // plugins/label-printer/material-analysis.mjs
+  var masses = { ...MOLAR_MASS, F: 18.998403163 };
+
+  // plugins/label-printer/glazy-adapter.mjs
+  function recipeId(path = location.pathname) {
+    return path.match(/^\/(?:recipes|materials)\/([1-9]\d*)(?:\/|$)/)?.[1] || null;
+  }
+  function requestHeaders(storage = localStorage) {
+    const headers = { Accept: "application/json", "X-Requested-With": "XMLHttpRequest" };
+    try {
+      const s = JSON.parse(storage.getItem("glazy-session") || "null");
+      if (s?.accessToken && typeof s.accessToken === "string" && Date.parse(s.expires) > Date.now()) headers.Authorization = "Bearer " + s.accessToken;
+    } catch {
+    }
+    return headers;
+  }
+
+  // plugins/melt-workbench/glazy.mjs
+  function abortable(promise, signal) {
+    if (!signal) return promise;
+    return new Promise((resolve, reject) => {
+      const abort = () => reject(new DOMException("Recipe loading cancelled.", "AbortError"));
+      if (signal.aborted) {
+        abort();
+        return;
+      }
+      signal.addEventListener("abort", abort, { once: true });
+      promise.then((value) => {
+        signal.removeEventListener("abort", abort);
+        resolve(value);
+      }, (error) => {
+        signal.removeEventListener("abort", abort);
+        reject(error);
+      });
+    });
+  }
+  async function loadCurrentRecipe({ path = location.pathname, signal, fetcher = fetch, chemistry = nativeChemistry } = {}) {
+    const id = recipeId(path);
+    if (!id) throw Error("Open this tool on a Glazy recipe page.");
+    const response = await fetcher("https://api.glazy.org/v2/recipes/" + id, { credentials: "include", headers: requestHeaders(), signal });
+    if (!response.ok) throw Error("Glazy returned HTTP " + response.status + ". Check that this recipe is available, then reload it.");
+    const json = await response.json(), data = json?.data || json?.recipe || json;
+    if (String(data?.id) !== id) throw Error("Glazy returned a different recipe. Please reload.");
+    const analysis = data.analysis;
+    if (!analysis || !Object.entries(analysis).some(([k, v]) => /^[A-Z][a-z]?\d*(?:[A-Z][a-z]?\d*)*$/.test(k) && Number(v) > 0)) throw Error("This recipe has no usable chemical analysis.");
+    const engine = await abortable(chemistry(), signal);
+    if (signal?.aborted) throw new DOMException("Recipe loading cancelled.", "AbortError");
+    const calculated = engine.calculate(analysis);
+    if (!calculated || typeof calculated !== "object" || !Number.isFinite(calculated.SiO2) || !Number.isFinite(calculated.Al2O3)) throw Error("Glazy could not calculate the recipe UMF.");
+    const values = chemistryValues(Object.fromEntries(OXIDES.map((k) => [k, calculated[k] ?? 0])));
+    const other = Object.entries(calculated).filter(([k, v]) => /^[A-Z][a-z]?\d*(?:[A-Z][a-z]?\d*)*$/.test(k) && !OXIDES.includes(k) && Number.isFinite(v) && v > 0);
+    const name = typeof data.name === "string" ? data.name : data.translations?.find((t) => t.locale === "en")?.name || "Glazy recipe";
+    return { id, name, values, other, umfOrder: Object.keys(calculated), atmospheres: Array.isArray(data.atmospheres) ? [...data.atmospheres] : [] };
+  }
+
+  // plugins/melt-workbench/compact.mjs
+  function cardRecipe(card) {
+    const title = card.querySelector('[data-slot="card-title"] a[href]');
+    if (!title) return null;
+    const url = new URL(title.getAttribute("href"), location.href);
+    const id = url.origin === location.origin && url.pathname.match(/^\/recipes\/([1-9]\d*)(?:\/|$)/)?.[1];
+    return id ? { id, name: title.textContent.trim() || "Glazy recipe" } : null;
+  }
+
+  // plugins/glaze-guesstimator/checks.mjs
+  var GLASSFORMER_SEGMENTS = Object.freeze([
+    [[2, 0.5], [2, 0.36], [2.2, 0.25], [2.5, 0.25]],
+    [[2.5, 0.25], [3, 0.25], [3.7, 0.27], [4, 0.3]]
+  ]);
+  var cubic = (p, t, axis) => (1 - t) ** 3 * p[0][axis] + 3 * (1 - t) ** 2 * t * p[1][axis] + 3 * (1 - t) * t * t * p[2][axis] + t ** 3 * p[3][axis];
+  function minimumAlumina(silica) {
+    if (silica < 2) return Infinity;
+    if (silica === 2) return 0.5;
+    if (silica >= 4) return 0.3;
+    const p = GLASSFORMER_SEGMENTS[silica < 2.5 ? 0 : 1];
+    let lo = 0, hi = 1;
+    for (let i = 0; i < 60; i++) {
+      const t = (lo + hi) / 2;
+      if (cubic(p, t, 0) < silica) lo = t;
+      else hi = t;
+    }
+    return cubic(p, (lo + hi) / 2, 1);
+  }
+  function sanityCheck(x, h, result) {
+    const reasons = [];
+    const supported = h >= 3;
+    if (supported) {
+      if (x.Al2O3 + 1e-10 < minimumAlumina(x.SiO2)) reasons.push("Low glassformer");
+    }
+    if (result.F < -1e-10) reasons.push("Underfired");
+    const r = x.K2O + x.Na2O + x.Li2O;
+    const maxR = 0.3 + 0.1 * Math.max(0, Math.min(1, (h - 6) / 3));
+    if (supported && (r < 0.1 - 1e-10 || r > maxR + 1e-10)) reasons.push("Higher-risk flux ratio");
+    if (x.B2O3 > 0.45) reasons.push("Excessive boron \u2014 B2O3");
+    return { supported, reasons, lead: x.PbO >= 0.03 ? "Contains Lead: FDA regulated, and a health concern if not treated properly" : null };
+  }
+
+  // plugins/glaze-guesstimator/display.mjs
+  var fluidityPosition = (value) => (9 ** ((clamp(value, -10, 10) + 10) / 20) - 1) / 8;
+  var neutralAtmospheres = (atmospheres) => Array.isArray(atmospheres) && atmospheres.some((id) => Number(id) === 4 || Number(id) === 5);
+  var evaluationOffset = (markerX, textWidth, trackWidth) => clamp(markerX - textWidth / 2, 0, Math.max(0, trackWidth - textWidth));
+
+  // plugins/glaze-guesstimator/placement.mjs
+  var clamp2 = (v, min, max) => Math.max(min, Math.min(max, v));
+  function evaluatorPlacement(anchor, { width: vw, height: vh, dockTop }, contentHeight) {
+    const gutter = 12, overlap = 10, ceiling = Math.max(gutter, Math.min(vh - gutter, dockTop - gutter)), available = Math.max(0, ceiling - gutter);
+    const width = Math.min(anchor?.width > 0 ? anchor.width : 320, Math.max(0, vw - 2 * gutter), vw * 2 / 3);
+    const height = Math.min(contentHeight, available), narrow = vw < 1024;
+    const opensRight = !!anchor && anchor.right - overlap + width <= vw - gutter;
+    const opensLeft = !!anchor && !opensRight && anchor.left - width + overlap >= gutter;
+    const left = narrow ? gutter : opensRight ? anchor.right - overlap : opensLeft ? anchor.left - width + overlap : vw - width - gutter;
+    const top = narrow || !anchor ? ceiling - height : clamp2(anchor.top, gutter, ceiling - height);
+    const corner = anchor ? (top < anchor.top ? "bottom" : "top") + "-" + (opensLeft ? "right" : "left") : void 0;
+    return { width, left, top, maxHeight: available, corner };
+  }
+
+  // plugins/glaze-guesstimator/guesstimator.mjs
+  var VERSION = "0.1.16";
+  var GLOBAL = "RBGlazyGlazeGuesstimator";
+  var CARD = '[data-slot="card"][role="article"]';
+  var INTERACTIVE = 'a,button,input,select,textarea,label,summary,[role="button"],[role="checkbox"],[role="link"],[role="menuitem"],[contenteditable]:not([contenteditable="false"])';
+  var recipeId2 = () => location.pathname.match(/^\/recipes\/([1-9]\d*)(?:\/|$)/)?.[1] || null;
+  var formatCone = (h) => coneLabel(h).replace("\u0394", "Cone ");
+  var cones = Array.from({ length: 16 }, (_, i) => i - 3);
+  var CONE_STORAGE = "RBGlazyGuesstimatorIntendedCone";
+  function savedCone() {
+    try {
+      const saved = window.localStorage.getItem(CONE_STORAGE);
+      if (saved !== null && saved.trim() !== "" && cones.includes(Number(saved))) return Number(saved);
+    } catch {
+    }
+    return 6;
+  }
+  function startGuesstimator() {
+    window[GLOBAL]?.stop?.();
+    window.RBGlazyMeltWorkbench?.stop?.();
+    const focusBefore = document.activeElement, cache = /* @__PURE__ */ new Map(), decorated = /* @__PURE__ */ new Map();
+    let alive = true, h = savedCone(), currentId = recipeId2(), mode = currentId ? "recipe" : "cards", selected = null, recipe = null, controller = null, marked = null, positionFrame = 0;
+    const root = document.createElement("section");
+    root.id = "rb-glaze-guesstimator";
+    root.dataset.mode = mode;
+    root.setAttribute("aria-label", "Ronald\u2019s Glaze behaviour Guesstimator");
+    root.innerHTML = `<header class="rbgg-header"><h2>Ronald\u2019s Glaze behaviour Guesstimator</h2><button type="button" data-close aria-label="Close Guesstimator">\xD7</button></header>
+  <div class="rbgg-firing"><span data-card-instruction>Click in a blank area of a recipe card to show the Likely surface and fluidity at</span> <select id="rbgg-cone" aria-label="Intended firing cone">${cones.map((c) => `<option value="${c}" ${c === h ? "selected" : ""}>${formatCone(c)}</option>`).join("")}</select> <label for="rbgg-cone">Intended firing cone</label></div>`;
+    const panel = document.createElement("section");
+    panel.className = "rbgg-panel";
+    panel.setAttribute("aria-label", "Glaze evaluation");
+    const meterMarkup = (kind, labels) => `<section class="rbgg-reading rbgg-reading-${kind}"><div class="rbgg-scale-group"><div class="rbgg-labels rbgg-labels-${kind}" aria-hidden="true">${labels.map((s) => `<span>${s}</span>`).join("")}</div><div class="rbgg-scale rbgg-${kind}" data-scale="${kind}" role="meter" aria-label="${kind === "fluidity" ? "Possible fluidity" : "Likely surface"}" aria-valuemin="${kind === "fluidity" ? -10 : 0}" aria-valuemax="${kind === "fluidity" ? 10 : 1}" hidden><span class="rbgg-hatch" aria-hidden="true"></span><i class="rbgg-marker" aria-hidden="true"></i></div></div><div class="rbgg-evaluation"><output data-${kind}-evaluation>\u2014</output>${kind === "fluidity" ? '<small class="rbgg-thickness" hidden>[actual fluidity depending on application thickness]</small>' : ""}</div></section>`;
+    panel.innerHTML = `<div class="rbgg-results" aria-live="polite"><header class="rbgg-prediction-header"><h3 class="rbgg-summary">Likely surface and fluidity at <span data-firing-heading>${coneLabel(h)}</span></h3><button type="button" data-dismiss aria-label="Close recipe evaluation">\xD7</button></header>${meterMarkup("surface", ["Dry", "Matte", "Glossy"])}${meterMarkup("fluidity", ["Underfired", "Melted", "Excessive"])}
+  <div class="rbgg-lowest"><span>Lowest full melt: <output data-lowest>\u2014</output></span></div><div class="rbgg-sanity" hidden><strong data-check-heading></strong> <span data-check-reasons></span></div><p class="rbgg-lead" hidden></p></div>
+  <div class="rbgg-status" role="status" aria-live="polite"></div>
+  `;
+    const support = document.createElement("details");
+    support.className = "rbgg-support";
+    support.innerHTML = `<summary>Are you enjoying the tool\u2026?</summary><p>If you do, consider buying me a bag of feldspar.</p><div data-stripe-card></div>`;
+    support.addEventListener("toggle", () => {
+      if (support.open && !support.querySelector("iframe")) {
+        const frame = document.createElement("iframe");
+        frame.title = "Support Ronald Boersen";
+        frame.allow = "payment";
+        frame.srcdoc = '<script async src="https://js.stripe.com/v3/buy-button.js"><\/script><stripe-buy-button buy-button-id="buy_btn_1ULbVZ00N0sfWSiA67TKteBE" publishable-key="pk_live_51PE0IV00N0sfWSiA2iKiBVFRG09NNMGPaYgtUfZgZYVZ2WAi3fNQz401Dw2EAJ9wcJcJWcbxnExYXUIKQ7P0vIhU005HBELFyo"></stripe-buy-button>';
+        support.querySelector("[data-stripe-card]").append(frame);
+      }
+      schedulePosition();
+    });
+    const fluidityScale = panel.querySelector(".rbgg-reading-fluidity");
+    fluidityScale.style.setProperty("--rbgg-white", fluidityPosition(1) * 100 + "%");
+    root.append(panel, support);
+    document.body.append(root);
+    if (typeof RBGlazyBrandHeader === "function") RBGlazyBrandHeader(root.querySelector("h2"));
+    if (typeof RBGlazyVersionFooter === "function") RBGlazyVersionFooter(support, VERSION);
+    const spacer = document.createElement("div");
+    spacer.setAttribute("aria-hidden", "true");
+    document.body.append(spacer);
+    const $ = (s) => panel.querySelector(s);
+    function setStatus(text, error = false) {
+      const n = $(".rbgg-status");
+      n.textContent = text;
+      n.hidden = !text;
+      n.setAttribute("role", error ? "alert" : "status");
+    }
+    function clear() {
+      panel.dataset.flagTone = neutralAtmospheres(recipe?.atmospheres) ? "neutral" : "warning";
+      for (const s of ["[data-fluidity-evaluation]", "[data-surface-evaluation]", "[data-lowest]"]) $(s).textContent = "\u2014";
+      panel.querySelectorAll("[data-scale]").forEach((n) => {
+        n.hidden = true;
+        n.removeAttribute("aria-valuenow");
+        n.removeAttribute("aria-valuetext");
+      });
+      for (const s of [".rbgg-thickness", ".rbgg-sanity", ".rbgg-lead"]) $(s).hidden = true;
+    }
+    function meter(kind, value, min, max, label) {
+      const node = $('[data-scale="' + kind + '"]');
+      node.hidden = false;
+      node.setAttribute("aria-valuenow", clamp(value, min, max));
+      node.setAttribute("aria-valuetext", label + " \xB7 " + Number(value.toFixed(3)) + (value < min || value > max ? " \xB7 beyond displayed scale" : ""));
+      const position2 = kind === "fluidity" ? fluidityPosition(value) : (clamp(value, min, max) - min) / (max - min);
+      node.querySelector(".rbgg-marker").style.left = position2 * 100 + "%";
+    }
+    function draw() {
+      $("[data-firing-heading]").textContent = coneLabel(h);
+      if (!recipe) return;
+      panel.dataset.flagTone = neutralAtmospheres(recipe.atmospheres) ? "neutral" : "warning";
+      try {
+        const t = evaluate(recipe.values, DEFAULTS, h);
+        const fluid = fluidityLabel(t.F);
+        $("[data-fluidity-evaluation]").textContent = fluid;
+        $(".rbgg-thickness").hidden = t.F < 0;
+        meter("fluidity", t.F, -10, 10, fluid);
+        if (t.surface.available) {
+          const label = surfaceLabel(t.surface.value);
+          $("[data-surface-evaluation]").textContent = label;
+          meter("surface", t.surface.value, 0, 1, label);
+        } else {
+          $("[data-surface-evaluation]").textContent = "Unavailable \xB7 " + t.surface.reason;
+          $('[data-scale="surface"]').hidden = true;
+        }
+        $("[data-lowest]").textContent = formatCone(t.dissolution);
+        const checks = sanityCheck(recipe.values, h, t);
+        $(".rbgg-sanity").hidden = !checks.reasons.length;
+        $("[data-check-heading]").textContent = "Possible durability concerns:";
+        $("[data-check-reasons]").textContent = checks.reasons.join(" \xB7 ");
+        $(".rbgg-lead").hidden = !checks.lead;
+        $(".rbgg-lead").textContent = checks.lead || "";
+        setStatus("");
+      } catch (error) {
+        clear();
+        setStatus(error.message, true);
+      }
+      schedulePosition();
+    }
+    function alignEvaluations() {
+      for (const reading of panel.querySelectorAll(".rbgg-reading")) {
+        const scale = reading.querySelector("[data-scale]"), track = reading.querySelector(".rbgg-evaluation");
+        const marker = scale.querySelector(".rbgg-marker").getBoundingClientRect();
+        const markerX = marker.left + marker.width / 2 - track.getBoundingClientRect().left;
+        for (const text of track.children) {
+          if (text.hidden) continue;
+          text.style.left = (scale.hidden ? 0 : evaluationOffset(markerX, text.getBoundingClientRect().width, track.clientWidth)) + "px";
+        }
+      }
+    }
+    function position() {
+      if (!alive) return;
+      positionFrame = 0;
+      const viewport = window.visualViewport, vw = viewport?.width || window.innerWidth, vh = viewport?.height || window.innerHeight;
+      const narrow = vw < 1024;
+      root.classList.toggle("rbgg-narrow", narrow);
+      root.style.removeProperty("left");
+      root.style.removeProperty("width");
+      if (mode === "recipe" && !narrow) {
+        const aside = document.querySelector('aside[aria-label="Context panel"]'), rect = aside?.getBoundingClientRect();
+        if (rect && rect.width > 0) {
+          root.style.width = rect.width + "px";
+          root.style.left = rect.left + "px";
+        }
+      }
+      panel.style.removeProperty("left");
+      panel.style.removeProperty("top");
+      panel.style.removeProperty("width");
+      panel.style.removeProperty("max-height");
+      delete panel.dataset.corner;
+      const bottom = root.getBoundingClientRect();
+      if (mode === "cards" && !panel.hidden) {
+        const rect = marked?.isConnected ? marked.getBoundingClientRect() : null;
+        const anchor = rect && rect.width > 0 ? rect : null;
+        panel.style.width = Math.min(anchor?.width || 320, vw * 2 / 3, vw - 24) + "px";
+        const placed = evaluatorPlacement(anchor, { width: vw, height: vh, dockTop: bottom.top }, panel.scrollHeight + 2);
+        panel.style.width = placed.width + "px";
+        panel.style.maxHeight = placed.maxHeight + "px";
+        panel.style.left = placed.left + "px";
+        panel.style.top = placed.top + "px";
+        if (anchor) panel.dataset.corner = placed.corner;
+      }
+      const reserve = mode === "recipe" ? bottom.height : bottom.height + (panel.hidden ? 0 : Math.min(panel.scrollHeight, 330));
+      spacer.style.height = Math.min(vh * 0.8, reserve + 16) + "px";
+      alignEvaluations();
+    }
+    function schedulePosition() {
+      if (alive && !positionFrame) positionFrame = requestAnimationFrame(position);
+    }
+    function syncDock() {
+      const cards = mode === "cards", collapsed = cards && !panel.hidden;
+      root.classList.toggle("rbgg-collapsed", collapsed);
+      root.querySelector(".rbgg-firing").hidden = collapsed;
+      root.querySelector("[data-card-instruction]").hidden = !cards;
+      root.querySelector('label[for="rbgg-cone"]').textContent = cards ? "as your intended firing cone" : "Intended firing cone";
+      support.hidden = collapsed;
+    }
+    function showPanel() {
+      panel.hidden = false;
+      syncDock();
+      schedulePosition();
+    }
+    function dismiss() {
+      panel.hidden = true;
+      controller?.abort();
+      controller = null;
+      marked?.removeAttribute("data-rbgg-selected");
+      marked = null;
+      syncDock();
+      schedulePosition();
+    }
+    async function select(info, card = null, force = false) {
+      controller?.abort();
+      const current = new AbortController();
+      controller = current;
+      selected = info;
+      recipe = null;
+      clear();
+      marked?.removeAttribute("data-rbgg-selected");
+      marked = card;
+      marked?.setAttribute("data-rbgg-selected", "");
+      showPanel();
+      setStatus("Loading Glazy chemistry\u2026");
+      const timeout = setTimeout(() => current.abort(), 2e4);
+      try {
+        const loaded = !force && cache.has(info.id) ? cache.get(info.id) : await loadCurrentRecipe({ path: "/recipes/" + info.id, signal: current.signal });
+        if (!alive || current !== controller || current.signal.aborted) return;
+        cache.set(info.id, loaded);
+        recipe = loaded;
+        draw();
+      } catch (error) {
+        if (alive && current === controller) {
+          clear();
+          setStatus(error.name === "AbortError" ? "Loading timed out. Select the recipe again to retry." : error.message, true);
+          schedulePosition();
+        }
+      } finally {
+        clearTimeout(timeout);
+      }
+    }
+    function cardTarget(event) {
+      if (mode !== "cards" || event.defaultPrevented || event.target.closest(INTERACTIVE) || root.contains(event.target) || panel.contains(event.target)) return null;
+      const card = event.target.closest(CARD);
+      return card && cardRecipe(card) ? card : null;
+    }
+    function click(event) {
+      if (event.button !== 0 || event.ctrlKey || event.metaKey || event.altKey || event.shiftKey || document.getSelection()?.toString()) return;
+      const card = cardTarget(event);
+      if (card) select(cardRecipe(card), card);
+      else if (mode === "cards" && !root.contains(event.target) && !panel.contains(event.target)) dismiss();
+    }
+    function keydown(event) {
+      if (event.key === "Escape") {
+        if (mode === "cards" && !panel.hidden) dismiss();
+        else stop();
+        return;
+      }
+      if (event.key !== "Enter" && event.key !== " ") return;
+      const card = cardTarget(event);
+      if (card && event.target === card) {
+        event.preventDefault();
+        select(cardRecipe(card), card);
+      }
+    }
+    function decorate() {
+      if (!alive) return;
+      if (mode === "cards") {
+        for (const card of document.querySelectorAll(CARD)) if (cardRecipe(card) && !decorated.has(card)) {
+          decorated.set(card, card.getAttribute("tabindex"));
+          if (!card.hasAttribute("tabindex")) card.setAttribute("tabindex", "0");
+        }
+      }
+      for (const [card, tabindex] of decorated) if (mode !== "cards" || !card.isConnected) {
+        if (tabindex == null) card.removeAttribute("tabindex");
+        else card.setAttribute("tabindex", tabindex);
+        decorated.delete(card);
+      }
+      schedulePosition();
+    }
+    function switchMode() {
+      const id = recipeId2(), next = id ? "recipe" : "cards";
+      if (id === currentId && next === mode) return;
+      controller?.abort();
+      controller = null;
+      currentId = id;
+      mode = next;
+      root.dataset.mode = mode;
+      recipe = null;
+      selected = null;
+      clear();
+      marked?.removeAttribute("data-rbgg-selected");
+      marked = null;
+      if (mode === "cards") {
+        document.body.append(panel);
+        panel.hidden = true;
+      } else {
+        root.insertBefore(panel, support);
+        select({ id });
+      }
+      syncDock();
+      decorate();
+      schedulePosition();
+    }
+    if (mode === "cards") {
+      document.body.append(panel);
+      panel.hidden = true;
+    } else select({ id: currentId });
+    syncDock();
+    const sizeObserver = new ResizeObserver(schedulePosition);
+    sizeObserver.observe(root);
+    sizeObserver.observe(panel);
+    const cardsObserver = new MutationObserver(decorate);
+    cardsObserver.observe(document.body, { childList: true, subtree: true });
+    decorate();
+    const routeTimer = setInterval(switchMode, 400);
+    document.addEventListener("click", click);
+    document.addEventListener("keydown", keydown);
+    window.addEventListener("resize", schedulePosition);
+    window.addEventListener("scroll", schedulePosition, true);
+    window.visualViewport?.addEventListener("resize", schedulePosition);
+    root.querySelector("select").addEventListener("change", (event) => {
+      const next = Number(event.target.value);
+      if (!cones.includes(next)) return;
+      h = next;
+      try {
+        window.localStorage.setItem(CONE_STORAGE, String(h));
+      } catch {
+      }
+      draw();
+    });
+    root.querySelector("[data-close]").addEventListener("click", stop);
+    $("[data-dismiss]").addEventListener("click", dismiss);
+    function stop() {
+      if (!alive) return;
+      alive = false;
+      controller?.abort();
+      clearInterval(routeTimer);
+      cancelAnimationFrame(positionFrame);
+      sizeObserver.disconnect();
+      cardsObserver.disconnect();
+      document.removeEventListener("click", click);
+      document.removeEventListener("keydown", keydown);
+      window.removeEventListener("resize", schedulePosition);
+      window.removeEventListener("scroll", schedulePosition, true);
+      window.visualViewport?.removeEventListener("resize", schedulePosition);
+      marked?.removeAttribute("data-rbgg-selected");
+      for (const [card, tabindex] of decorated) if (tabindex == null) card.removeAttribute("tabindex");
+      else card.setAttribute("tabindex", tabindex);
+      const restore = root.contains(document.activeElement) || panel.contains(document.activeElement);
+      root.remove();
+      panel.remove();
+      spacer.remove();
+      cache.clear();
+      if (window[GLOBAL] === api) delete window[GLOBAL];
+      if (restore && focusBefore?.isConnected) focusBefore.focus({ preventScroll: true });
+    }
+    const api = { version: VERSION, open() {
+      showPanelIfRecipe();
+    }, stop, reload: () => selected && select(selected, marked, true), getState: () => ({ mode, firing: h, recipeId: selected?.id || null, chemistry: recipe ? { ...recipe.values } : null, coefficients: { ...DEFAULTS } }) };
+    function showPanelIfRecipe() {
+      switchMode();
+      if (mode === "recipe") showPanel();
+    }
+    window[GLOBAL] = api;
+    schedulePosition();
+    return api;
+  }
+  startGuesstimator();
+})();
+</script></body></html>
