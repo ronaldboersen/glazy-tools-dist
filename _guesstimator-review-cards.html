@@ -20,7 +20,7 @@
 .rbgg-scale-group{min-width:0}
 .rbgg-labels{display:grid;gap:0;align-items:end;min-height:26px;margin-bottom:5px;font-size:11px;color:#666;line-height:1.15}
 .rbgg-labels span{min-width:0}
-.rbgg-labels-surface{grid-template-columns:25% 15% 60%}
+.rbgg-labels-surface{grid-template-columns:30% 10% 60%;min-height:14px}
 .rbgg-labels-surface span:nth-child(2){text-align:center}
 .rbgg-labels span:last-child{text-align:right}
 .rbgg-labels-fluidity{grid-template-columns:50% 25% 25%}
@@ -409,7 +409,7 @@ function RBGlazyVersionFooter(support, version) {
     const panel = document.createElement("section");
     panel.className = "rbgg-panel";
     panel.setAttribute("aria-label", "Glaze evaluation");
-    const meterMarkup = (kind, labels) => `<section class="rbgg-reading rbgg-reading-${kind}"><h3>${kind === "fluidity" ? "Possible fluidity" : "Likely surface"}</h3><div class="rbgg-scale-group"><div class="rbgg-labels rbgg-labels-${kind}" aria-hidden="true">${labels.map((s) => `<span>${s === "Underfired" ? "Under<wbr>fired" : s}</span>`).join("")}</div><div class="rbgg-scale rbgg-${kind}" data-scale="${kind}" role="meter" aria-label="${kind === "fluidity" ? "Possible fluidity" : "Likely surface"}" aria-valuemin="${kind === "fluidity" ? -10 : 0}" aria-valuemax="${kind === "fluidity" ? 10 : 1}" hidden><span class="rbgg-hatch" aria-hidden="true"></span></div></div><div class="rbgg-evaluation"><output data-${kind}-evaluation>\u2014</output>${kind === "fluidity" ? '<small class="rbgg-thickness" hidden>[actually fluidity depending on application thickness]</small>' : ""}</div></section>`;
+    const meterMarkup = (kind, labels) => `<section class="rbgg-reading rbgg-reading-${kind}"><h3>${kind === "fluidity" ? "Possible fluidity" : "Likely surface"}</h3><div class="rbgg-scale-group"><div class="rbgg-labels rbgg-labels-${kind}" aria-hidden="true">${labels.map((s) => `<span>${s}</span>`).join("")}</div><div class="rbgg-scale rbgg-${kind}" data-scale="${kind}" role="meter" aria-label="${kind === "fluidity" ? "Possible fluidity" : "Likely surface"}" aria-valuemin="${kind === "fluidity" ? -10 : 0}" aria-valuemax="${kind === "fluidity" ? 10 : 1}" hidden><span class="rbgg-hatch" aria-hidden="true"></span></div></div><div class="rbgg-evaluation"><output data-${kind}-evaluation>\u2014</output>${kind === "fluidity" ? '<small class="rbgg-thickness" hidden>[actually fluidity depending on application thickness]</small>' : ""}</div></section>`;
     panel.innerHTML = `<div class="rbgg-results" aria-live="polite">${meterMarkup("surface", ["Underfired", "Matte", "Glossy"])}${meterMarkup("fluidity", ["Underfired", "Fully melted", "Excessively melted"])}
   <div class="rbgg-lowest"><span>Lowest full melt</span><output data-lowest>\u2014</output><button type="button" data-reload aria-label="Reload selected recipe" disabled>\u21BB</button><button type="button" data-dismiss aria-label="Close recipe evaluation">\xD7</button></div><div class="rbgg-sanity" hidden><strong data-check-heading></strong><span data-check-reasons></span></div><small data-check-scope hidden>Flux and glassformer checks: cone 3 and above</small><p class="rbgg-lead" hidden></p></div>
   <div class="rbgg-status" role="status" aria-live="polite"></div>
