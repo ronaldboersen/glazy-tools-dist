@@ -1,0 +1,22 @@
+<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><title>Guesstimator release verification</title><h1>Hosted release verification</h1><pre id="report">Loading hosted prototype manifest…</pre><script>
+const report=document.querySelector('#report');
+const add=(text)=>report.textContent+='\n'+text;
+const script=document.createElement('script');
+script.src='./rb-prototype-manifest.js?verification=115';
+script.onerror=()=>add('ERROR loading manifest');
+script.onload=async()=>{
+ const manifest=window.RB_PROTOTYPE_MANIFEST;add('Manifest: '+manifest.appVersion);
+ for(const asset of manifest.assets){
+  await new Promise((resolve,reject)=>{
+   const el=document.createElement(asset.type==='css'?'link':'script');
+   if(asset.type==='css'){el.rel='stylesheet';el.href='./'+asset.src;}else el.src='./'+asset.src;
+   el.onload=()=>{add('Loaded: '+asset.src);resolve();};
+   el.onerror=()=>{add('ERROR: '+asset.src);reject();};
+   document.head.append(el);
+  });
+ }
+ add('Running: '+window.RBGlazyGlazeGuesstimator?.version);
+ add('Firing: '+window.RBGlazyGlazeGuesstimator?.getState().firing);
+};
+document.head.append(script);
+</script>
