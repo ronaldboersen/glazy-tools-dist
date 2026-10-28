@@ -1,0 +1,1 @@
+window.RB_PROTOTYPE_MANIFEST={"schema":3,"name":"Ronald’s Batch Label Designer","version":"batch-label-designer-0.4.3","appGlobal":"RBBatchLabelDesigner","appVersion":"0.4.3","assets":[{"type":"css","src":"rb-batch-label-designer-v0.4.3.css"},{"type":"js","src":"rb-batch-label-designer-v0.4.3.js"}]};
