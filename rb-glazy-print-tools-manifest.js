@@ -1,1 +1,1 @@
-window.RB_GLAZY_PRINT_TOOLS_MANIFEST={"version":"1.0.19","script":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-print-tools-v1.0.19.js","style":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-print-tools-v1.0.19.css"};
+window.RB_GLAZY_PRINT_TOOLS_MANIFEST={"version":"1.1.0","script":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-print-tools-v1.1.0.js","style":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-print-tools-v1.1.0.css"};
