@@ -1,1 +1,1 @@
-window.RB_GLAZY_SUBSTITUTION_TOOL_MANIFEST={"version":"0.10.81","script":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-substitution-tool-v0.10.81.js","style":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-substitution-tool-v0.10.81.css"};
+window.RB_GLAZY_SUBSTITUTION_TOOL_MANIFEST={"version":"0.10.82","script":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-substitution-tool-v0.10.82.js","style":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-substitution-tool-v0.10.82.css"};
