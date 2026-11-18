@@ -41,7 +41,7 @@ def check_frames(frames, columns):
 class LetraTag:
     def __init__(self, simulate=False):
         self.simulate = simulate
-        self.simulated_connection = False
+        self.device = None
         self.devices = {}
         self.client = None
         self.name = ''
@@ -52,7 +52,7 @@ class LetraTag:
 
     @property
     def connected(self):
-        return self.simulated_connection or bool(self.client and self.client.is_connected)
+        return self.device is not None
 
     def status(self):
         return dict(connected=self.connected, name=self.name)
@@ -75,28 +75,22 @@ class LetraTag:
         device = self.devices.get(device_id)
         if not device:
             raise web.HTTPBadRequest(text='Choose a LetraTag from a fresh scan.')
-        await self.disconnect()
         self.uploads.clear()
-        if self.simulate:
-            self.simulated_connection = True
-            self.name = device
-        else:
-            from bleak import BleakClient
-
-            self.client = BleakClient(device, timeout=8)
-            try:
-                await self.client.connect()
-                if not self.client.services.get_characteristic(TX) or not self.client.services.get_characteristic(RX):
-                    raise RuntimeError('The selected device does not expose the LetraTag print service.')
-                self.name = device.name or 'LetraTag 200B'
-            except Exception:
-                await self.disconnect()
-                raise
+        self.device = device
+        self.name = device if self.simulate else device.name or 'LetraTag 200B'
         return self.status()
+
+    async def open_connection(self):
+        from bleak import BleakClient
+
+        self.client = BleakClient(self.device, timeout=8)
+        await self.client.connect()
+        if not self.client.services.get_characteristic(TX) or not self.client.services.get_characteristic(RX):
+            raise RuntimeError('The selected device does not expose the LetraTag print service.')
+        return self.client
 
     async def disconnect(self):
         client, self.client = self.client, None
-        self.simulated_connection = False
         if client and client.is_connected:
             await client.disconnect()
 
@@ -115,7 +109,8 @@ class LetraTag:
             if action == 'connect':
                 return await self.connect(payload.get('id'))
             if action == 'disconnect':
-                await self.disconnect()
+                self.device = None
+                self.name = ''
                 self.uploads.clear()
                 return self.status()
             if not self.connected:
@@ -169,7 +164,6 @@ class LetraTag:
             job.update(state='done', progress=1, code=0, printStarted=True)
             return
 
-        client = self.client
         complete = asyncio.get_running_loop().create_future()
 
         def on_result(_sender, data):
@@ -177,6 +171,7 @@ class LetraTag:
                 complete.set_result(data[2])
 
         try:
+            client = await self.open_connection()
             characteristic = client.services.get_characteristic(TX)
             if any(len(frame) > characteristic.max_write_without_response_size for frame in frames):
                 raise RuntimeError('This Bluetooth connection cannot send the LetraTag packet size.')
@@ -190,14 +185,15 @@ class LetraTag:
                     await asyncio.sleep(.025)
             timeout = max(30, columns / (200 / 25.4) / 3 + 15)
             code = await asyncio.wait_for(complete, timeout)
-            await client.stop_notify(RX)
-            job.update(state='done', progress=1, code=code)
+            result = dict(state='done', progress=1, code=code)
         except Exception as error:
-            job.update(state='error', error=str(error) or 'The LetraTag did not confirm the print.')
+            result = dict(state='error', error=str(error) or 'The LetraTag did not confirm the print.')
+        finally:
             try:
                 await self.disconnect()
             except Exception:
                 pass
+        job.update(result)
 
     async def close(self):
         if self.task and not self.task.done():
