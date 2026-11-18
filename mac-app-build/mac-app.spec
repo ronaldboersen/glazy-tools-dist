@@ -18,7 +18,7 @@ exe = EXE(pyz, a.scripts, [], exclude_binaries=True, name=name,
     entitlements_file=None)
 coll = COLLECT(exe, a.binaries, a.datas, strip=False, upx=False, name=name)
 app = BUNDLE(coll, name=name+'.app', bundle_identifier='com.ronaldboersen.glazy-label-helper',
-    info_plist={'CFBundleShortVersionString':'0.1.15', 'CFBundleVersion':'0.1.15',
+    info_plist={'CFBundleShortVersionString':'0.1.16', 'CFBundleVersion':'0.1.16',
         'NSBluetoothAlwaysUsageDescription':'Connect to your label printer to print labels.',
         'NSBluetoothPeripheralUsageDescription':'Connect to your label printer to print labels.',
         'NSHighResolutionCapable':True})

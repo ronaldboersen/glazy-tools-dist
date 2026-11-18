@@ -204,14 +204,14 @@ class LetraTag:
         try:
             client = await self.open_connection()
             characteristic = client.services.get_characteristic(TX)
-            if any(len(frame) > characteristic.max_write_without_response_size for frame in frames):
-                raise RuntimeError('This Bluetooth connection cannot send the LetraTag packet size.')
+            if 'write' not in characteristic.properties:
+                raise RuntimeError('The LetraTag does not advertise acknowledged Bluetooth writes for legacy printing.')
             await client.start_notify(RX, on_result)
             for index, frame in enumerate(frames):
                 if index == len(frames) - 1:
                     final_write_at = time.monotonic()
                     job['printStarted'] = True
-                await client.write_gatt_char(characteristic, frame, response=False)
+                await client.write_gatt_char(characteristic, frame, response=True)
                 job['progress'] = (index + 1) / len(frames)
                 if not job['printStarted']:
                     await asyncio.sleep(.025)

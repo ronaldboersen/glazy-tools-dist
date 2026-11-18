@@ -1,4 +1,4 @@
-Ronald’s Mac Label Helper — v0.1.15 · Apple silicon
+Ronald’s Mac Label Helper — v0.1.16 · Apple silicon
 
 Install the actual Ronalds Mac Label Helper.app, not an outer archive folder.
 Quit the old helper, move the app into a writable Applications folder, and open

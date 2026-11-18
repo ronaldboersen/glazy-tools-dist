@@ -17,7 +17,7 @@ from letratag import LetraTag
 
 PORT = 41387
 SERVICE = 'rb-m110-mac-helper'
-VERSION = '0.1.15'
+VERSION = '0.1.16'
 WRITE_UUID = '0000ff02-0000-1000-8000-00805f9b34fb'
 NOTIFY_UUID = '0000ff03-0000-1000-8000-00805f9b34fb'
 
