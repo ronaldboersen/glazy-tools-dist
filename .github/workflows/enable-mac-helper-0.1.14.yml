@@ -1,0 +1,48 @@
+name: Enable Mac Helper 0.1.14 in-app update
+on:
+  push:
+    branches: [main]
+    paths: [.github/workflows/enable-mac-helper-0.1.14.yml]
+permissions:
+  contents: write
+jobs:
+  publish-update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify the public build and publish its update manifest
+        run: |
+          filename=Ronalds-Mac-Label-Helper-App-v0.1.14-Apple-silicon.zip
+          url="https://ronaldboersen.github.io/glazy-tools-dist/$filename"
+          curl --fail --silent --show-error --location --retry 6 --retry-all-errors --retry-max-time 90 --output "$RUNNER_TEMP/$filename" "$url"
+          cmp "$filename" "$RUNNER_TEMP/$filename"
+          python - <<'PY'
+          import hashlib
+          import json
+          import zipfile
+          import plistlib
+          from pathlib import Path
+
+          version = '0.1.14'
+          filename = f'Ronalds-Mac-Label-Helper-App-v{version}-Apple-silicon.zip'
+          archive = Path(filename)
+          with zipfile.ZipFile(archive) as bundle:
+              plists = [name for name in bundle.namelist()
+                        if name.endswith('.app/Contents/Info.plist') and not name.startswith('__MACOSX/')]
+              assert len(plists) == 1, plists
+              info = plistlib.loads(bundle.read(plists[0]))
+              assert info['CFBundleShortVersionString'] == version, info['CFBundleShortVersionString']
+          manifest_path = Path('mac-label-helper-update.json')
+          assert json.loads(manifest_path.read_text())['version'] == '0.1.13'
+          manifest = {'version': version, 'downloads': {'Apple-silicon': {
+              'url': f'https://ronaldboersen.github.io/glazy-tools-dist/{filename}',
+              'sha256': hashlib.sha256(archive.read_bytes()).hexdigest(),
+              'bytes': archive.stat().st_size,
+          }}}
+          manifest_path.write_text(json.dumps(manifest, indent=2) + '\n')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add mac-label-helper-update.json
+          git commit -m 'Enable verified Mac Helper v0.1.14 in-app update'
+          git push origin HEAD:main
