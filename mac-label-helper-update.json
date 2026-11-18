@@ -1,10 +1,10 @@
 {
-  "version": "0.1.13",
+  "version": "0.1.14",
   "downloads": {
     "Apple-silicon": {
-      "url": "https://ronaldboersen.github.io/glazy-tools-dist/Ronalds-Mac-Label-Helper-App-v0.1.13-Apple-silicon.zip",
-      "sha256": "c1bf12efd57faabfb8337f23fcaf87a36e1c05650d090c604424e6c5880379ef",
-      "bytes": 11767953
+      "url": "https://ronaldboersen.github.io/glazy-tools-dist/Ronalds-Mac-Label-Helper-App-v0.1.14-Apple-silicon.zip",
+      "sha256": "47dd12ae8d8f0dd58e200775a0d60a8cbc6a0034d7f17ec26ac37c5f9618f9a6",
+      "bytes": 11765758
     }
   }
 }
