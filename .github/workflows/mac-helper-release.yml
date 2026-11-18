@@ -1,0 +1,31 @@
+name: Mac Label Helper release page
+# When the publish step in glazy-tools offers a new Mac Label Helper through mac-label-helper-update.json,
+# create the matching GitHub release page with the app ZIP attached. Downloads and the in-app updater use
+# the GitHub Pages files; this page is for people browsing the repository's releases.
+on:
+  push:
+    branches: [main]
+    paths: ['mac-label-helper-update.json']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: mac-label-helper-update.json
+          sparse-checkout-cone-mode: false
+      - name: Create the release for the version the updater offers
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(python3 -c "import json;print(json.load(open('mac-label-helper-update.json'))['version'])")
+          tag="rb-mac-label-helper-v${version}"
+          zip="Ronalds-Mac-Label-Helper-App-v${version}-Apple-silicon.zip"
+          if gh release view "$tag" >/dev/null 2>&1; then echo "$tag already exists."; exit 0; fi
+          git sparse-checkout add "$zip"
+          test -e "$zip" || { echo "$zip is not in the repository."; exit 1; }
+          gh release create "$tag" "$zip" --target "$GITHUB_SHA" --title "Ronald's Mac Label Helper v${version}" \
+            --notes "Ronald's Mac Label Helper v${version} for Apple silicon Macs. Installed helpers update themselves; for a new installation, download the ZIP below, unzip it and open the app."
