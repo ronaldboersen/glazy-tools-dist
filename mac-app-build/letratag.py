@@ -14,6 +14,7 @@ SERVICE = 'be3dd650-2b3d-42f1-99c1-f0f749dd0678'
 TX = SERVICE.replace('d650', 'd651')
 RX = SERVICE.replace('d650', 'd652')
 FRAME_SIZE = 180
+REPLY_GUARD_SECONDS = 3
 MAX_COLUMNS = (255 * (FRAME_SIZE - 3) - 28) // 4
 
 
@@ -38,6 +39,17 @@ def check_frames(frames, columns):
         raise web.HTTPBadRequest(text='Invalid LetraTag print data.')
 
 
+    legacy = body[:6] + bytes.fromhex('1b 44 01 02') + body[13:-7] + bytes.fromhex('1b 45 1b 41 1b 51')
+    header = bytes.fromhex('ff f0 12 34') + struct.pack('<I', len(legacy))
+    result = [header + bytes([sum(header) & 255])]
+    chunk_size = FRAME_SIZE - 3
+    for index, offset in enumerate(range(0, len(legacy), chunk_size)):
+        chunk = legacy[offset:offset + chunk_size]
+        trailer = bytes.fromhex('12 34') if offset + len(chunk) == len(legacy) else b''
+        result.append(bytes([index + (index >= 27)]) + chunk + trailer)
+    return result
+
+
 class LetraTag:
     def __init__(self, simulate=False):
         self.simulate = simulate
@@ -55,7 +67,7 @@ class LetraTag:
         return self.device is not None
 
     def status(self):
-        return dict(connected=self.connected, name=self.name)
+        return dict(connected=self.connected, name=self.name, autoConnect=True)
 
     async def scan(self):
         if self.simulate:
@@ -104,6 +116,13 @@ class LetraTag:
                 return dict(self.job)
             if self.task and not self.task.done():
                 raise web.HTTPConflict(text='A LetraTag print is still active.')
+            if action == 'prepare':
+                if self.connected:
+                    return self.status()
+                devices = await self.scan()
+                if len(devices) == 1:
+                    return await self.connect(devices[0]['id'])
+                return dict(self.status(), devices=devices)
             if action == 'scan':
                 return dict(devices=await self.scan())
             if action == 'connect':
@@ -153,9 +172,9 @@ class LetraTag:
         del self.uploads[key]
         if len(item['frames']) < 2:
             raise web.HTTPBadRequest(text='Incomplete LetraTag upload.')
-        check_frames(item['frames'], item['columns'])
+        frames = check_frames(item['frames'], item['columns'])
         self.job = dict(upload=key, state='sending', progress=0, printStarted=False)
-        self.task = asyncio.create_task(self.print_frames(item['frames'], item['columns']))
+        self.task = asyncio.create_task(self.print_frames(frames, item['columns']))
         return dict(upload=key)
 
     async def print_frames(self, frames, columns):
@@ -165,10 +184,22 @@ class LetraTag:
             return
 
         complete = asyncio.get_running_loop().create_future()
+        final_write_at = None
+        replies = []
+        job['replies'] = replies
+        job['profile'] = 'legacy'
 
         def on_result(_sender, data):
-            if len(data) == 3 and data[:2] == bytes.fromhex('1b 52') and not complete.done():
-                complete.set_result(data[2])
+            if len(data) != 3 or data[:2] != bytes.fromhex('1b 52'):
+                return
+            elapsed = None if final_write_at is None else time.monotonic() - final_write_at
+            code = data[2]
+            if len(replies) < 16:
+                replies.append(dict(code=code, ms=None if elapsed is None else round(elapsed * 1000)))
+            if elapsed is None or complete.done():
+                return
+            if code not in (0, 1, 3) or (code in (0, 3) and elapsed >= REPLY_GUARD_SECONDS):
+                complete.set_result(code)
 
         try:
             client = await self.open_connection()
@@ -178,6 +209,7 @@ class LetraTag:
             await client.start_notify(RX, on_result)
             for index, frame in enumerate(frames):
                 if index == len(frames) - 1:
+                    final_write_at = time.monotonic()
                     job['printStarted'] = True
                 await client.write_gatt_char(characteristic, frame, response=False)
                 job['progress'] = (index + 1) / len(frames)
@@ -186,6 +218,8 @@ class LetraTag:
             timeout = max(30, columns / (200 / 25.4) / 3 + 15)
             code = await asyncio.wait_for(complete, timeout)
             result = dict(state='done', progress=1, code=code)
+        except asyncio.TimeoutError:
+            result = dict(state='error', error='No final LetraTag result arrived. Check the tape before resuming.')
         except Exception as error:
             result = dict(state='error', error=str(error) or 'The LetraTag did not confirm the print.')
         finally:

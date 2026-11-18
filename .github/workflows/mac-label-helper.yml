@@ -45,11 +45,11 @@ jobs:
         env:
           RB_ARCH: ${{ matrix.arch }}
         run: |
-          ditto -c -k --sequesterRsrc --keepParent 'dist/Ronalds Mac Label Helper.app' "Ronalds-Mac-Label-Helper-App-v0.1.14-${RB_ARCH}.zip"
+          ditto -c -k --sequesterRsrc --keepParent 'dist/Ronalds Mac Label Helper.app' "Ronalds-Mac-Label-Helper-App-v0.1.15-${RB_ARCH}.zip"
       - uses: actions/upload-artifact@v4
         with:
           name: Mac-Label-Helper-App-${{ matrix.arch }}
-          path: Ronalds-Mac-Label-Helper-App-v0.1.14-*.zip
+          path: Ronalds-Mac-Label-Helper-App-v0.1.15-*.zip
           retention-days: 30
   release:
     needs: build
@@ -63,17 +63,29 @@ jobs:
           pattern: Mac-Label-Helper-App-*
           path: app-downloads
           merge-multiple: true
-      - name: Publish verified app downloads (update manifest remains unchanged)
+      - name: Publish the verified ZIP and updater manifest
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create rb-mac-label-helper-v0.1.14 app-downloads/*.zip --target "$GITHUB_SHA" --title "Ronald's Mac Label Helper v0.1.14 - LetraTag fresh-connection test" --notes-file mac-app-build/APP-README.txt
+          gh release create rb-mac-label-helper-v0.1.15 app-downloads/*.zip --target "$GITHUB_SHA" --title "Ronald's Mac Label Helper v0.1.15 - LetraTag legacy protocol test" --notes-file mac-app-build/APP-README.txt
           gh auth setup-git
           gh repo clone "$GITHUB_REPOSITORY" publish-repo
           cp app-downloads/*.zip publish-repo/
           cd publish-repo
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add Ronalds-Mac-Label-Helper-App-v0.1.14-*.zip
-          git commit -m 'Publish verified Mac helper v0.1.14 app downloads'
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          version = '0.1.15'
+          archive = Path(f'Ronalds-Mac-Label-Helper-App-v{version}-Apple-silicon.zip')
+          manifest = {'version': version, 'downloads': {'Apple-silicon': {
+              'url': f'https://ronaldboersen.github.io/glazy-tools-dist/{archive.name}',
+              'sha256': hashlib.sha256(archive.read_bytes()).hexdigest(),
+              'bytes': archive.stat().st_size,
+          }}}
+          Path('mac-label-helper-update.json').write_text(json.dumps(manifest, indent=2) + '\n')
+          PY
+          git add Ronalds-Mac-Label-Helper-App-v0.1.15-*.zip mac-label-helper-update.json
+          git commit -m 'Publish verified Mac helper v0.1.15 app downloads'
           git push origin HEAD:main
