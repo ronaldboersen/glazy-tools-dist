@@ -1,0 +1,96 @@
+name: Stage verified Mac Helper 0.1.13 ZIP
+on:
+  push:
+    paths:
+      - '.github/workflows/publish-mac-helper-0.1.13.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15
+            arch: Apple-silicon
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: ronaldboersen/glazy-tools
+          ref: be97b5f0fd063b0b578acb6893df149e4666ad99
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install bundled runtime dependencies
+        run: python -m pip install -r plugins/label-printer/mac-helper/requirements.txt pyinstaller==6.22.3 pyobjc-framework-Cocoa pyobjc-framework-WebKit
+      - name: Test printer bridge
+        run: python tests/mac-label-helper.test.py
+      - name: Test updater validation and rollback
+        run: python tests/mac-label-updater.test.py
+      - name: Include Python licence
+        run: |
+          python - <<'PY'
+          import sys, urllib.request
+          from pathlib import Path
+          version = '.'.join(map(str, sys.version_info[:3]))
+          url = 'https://raw.githubusercontent.com/python/cpython/v' + version + '/LICENSE'
+          Path('plugins/label-printer/mac-helper/PYTHON-LICENSE.txt').write_bytes(urllib.request.urlopen(url).read())
+          PY
+      - name: Test inline Safari WebKit connection
+        run: python tests/mac-label-helper.webkit.py --helper-dir plugins/label-printer/mac-helper --fixtures tests/fixtures --runtime dist/rb-glazy-label-printer-v0.1.23.js
+      - name: Test standalone Batch Designer in Safari WebKit
+        run: python tests/batch-label-designer.webkit.py --helper-dir plugins/label-printer/mac-helper
+      - name: Test hosted Batch Designer in Safari WebKit
+        run: python tests/batch-label-designer.webkit.py --helper-dir plugins/label-printer/mac-helper --url https://ronaldboersen.github.io/glazy-tools-dist/batch-label-designer.html
+      - name: Build Cocoa app
+        run: python -m PyInstaller --noconfirm --clean plugins/label-printer/mac-helper/mac-app.spec
+      - name: Check packaged runtime and protocol
+        run: |
+          'dist/Ronalds Mac Label Helper.app/Contents/MacOS/Ronalds Mac Label Helper' --smoke-test
+          'dist/Ronalds Mac Label Helper.app/Contents/MacOS/Ronalds Mac Label Helper' --smoke-app
+          SSL_CERT_FILE=/dev/null SSL_CERT_DIR=/nonexistent 'dist/Ronalds Mac Label Helper.app/Contents/MacOS/Ronalds Mac Label Helper' --smoke-update
+          codesign --verify --deep --strict 'dist/Ronalds Mac Label Helper.app'
+          test -n "$(/usr/libexec/PlistBuddy -c 'Print NSBluetoothAlwaysUsageDescription' 'dist/Ronalds Mac Label Helper.app/Contents/Info.plist')"
+      - name: Package app
+        env:
+          RB_ARCH: ${{ matrix.arch }}
+        run: |
+          ditto -c -k --sequesterRsrc --keepParent 'dist/Ronalds Mac Label Helper.app' "Ronalds-Mac-Label-Helper-App-v0.1.13-${RB_ARCH}.zip"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Mac-Label-Helper-App-${{ matrix.arch }}
+          path: Ronalds-Mac-Label-Helper-App-v0.1.13-*.zip
+          retention-days: 30
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: Mac-Label-Helper-App-Apple-silicon
+          path: .
+      - name: Verify packaged 0.1.13 ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          file="Ronalds-Mac-Label-Helper-App-v0.1.13-Apple-silicon.zip"
+          test -s "$file"
+          unzip -t "$file" >/dev/null
+          echo "SHA256: $(sha256sum "$file")"
+          echo "BYTES: $(wc -c < "$file")"
+      - name: Stage verified ZIP without updating updater manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          file="Ronalds-Mac-Label-Helper-App-v0.1.13-Apple-silicon.zip"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- "$file"
+          git commit -m "Stage verified Mac Helper 0.1.13 Apple-silicon ZIP"
+          git push origin HEAD:main
