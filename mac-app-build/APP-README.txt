@@ -1,4 +1,4 @@
-Ronald’s Mac Label Helper — v0.1.10 · Apple silicon
+Ronald’s Mac Label Helper — v0.1.13 · Apple silicon
 
 Install the actual Ronalds Mac Label Helper.app, not an outer archive folder.
 Quit the old helper, move the app into a writable Applications folder, and open
@@ -20,7 +20,21 @@ switch it off and on before reconnecting. It starts printing after receiving
 the complete image; compare image send time separately from physical printing.
 
 Copy printer diagnostics reports helper version, packet size, confirmed-write
-limit and job progress. The local bridge accepts Glazy only and binds loopback.
+limit and job progress. The local bridge accepts Glazy, its own local Batch Designer page and Ronald’s hosted GitHub page only, and binds loopback.
 Updates verify architecture, version, size, SHA-256 and app signature and require
 an idle printer. Existing app is kept on replacement failure; macOS security
 metadata is retained. Python and bundled dependencies retain their licences.
+
+
+Open Batch Designer in the helper window launches the live designer in Safari.
+It uses the same updated label application as the bookmarklet, at a stable local
+address. An internet connection loads the application; batches stay in this
+browser on this Mac. Export/import existing Glazy batches once to move them.
+The iPhone bookmarklet remains available.
+
+Bookmarkable hosted designer: https://ronaldboersen.github.io/glazy-tools-dist/batch-label-designer.html
+Mac Safari needs helper 0.1.12 for this page. Desktop Chrome connects directly.
+iPhone Safari uses the existing beacio setup, enabled for ronaldboersen.github.io.
+The helper’s local launcher keeps its separate saved batches; it is unchanged.
+
+Batch Label Designer can connect to the DYMO LetraTag 200B on Mac Safari with this version.

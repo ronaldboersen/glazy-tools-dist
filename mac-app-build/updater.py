@@ -1,3 +1,193 @@
-# Ronald’s Mac Label Helper — packed build input
-import base64,zlib
-exec(compile(zlib.decompress(base64.b64decode('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')),__file__,"exec"))
+"""Verified downloads and transactional replacement of the idle Mac app."""
+import hashlib
+import json
+import os
+import platform
+import plistlib
+import posixpath
+import shutil
+import stat
+import ssl
+import certifi
+import subprocess
+import tempfile
+import time
+import urllib.request
+import zipfile
+from pathlib import Path
+
+BASE = 'https://ronaldboersen.github.io/glazy-tools-dist/'
+MANIFEST = BASE + 'mac-label-helper-update.json'
+APP_NAME = 'Ronalds Mac Label Helper.app'
+BUNDLE_ID = 'com.ronaldboersen.glazy-label-helper'
+MAX_DOWNLOAD = 60 * 1024 * 1024
+MAX_EXPANDED = 300 * 1024 * 1024
+
+
+def version_tuple(value):
+    parts = str(value).split('.')
+    if len(parts) != 3 or any(not p.isdigit() for p in parts):
+        raise ValueError('Invalid update version.')
+    return tuple(int(p) for p in parts)
+
+
+def fetch(url):
+    if not url.startswith(BASE) or '?' in url or '#' in url:
+        raise ValueError('Update URL is outside the download host.')
+    response = urllib.request.urlopen(urllib.request.Request(url, headers={'Cache-Control':'no-cache'}), timeout=20, context=ssl.create_default_context(cafile=certifi.where()))
+    if not response.geturl().startswith(BASE):
+        response.close()
+        raise ValueError('Update download redirected outside the download host.')
+    return response
+
+
+def check(current, machine=None):
+    arch = {'arm64':'Apple-silicon','aarch64':'Apple-silicon','x86_64':'Intel'}.get(machine or platform.machine())
+    if not arch:
+        raise ValueError('Unsupported Mac architecture.')
+    with fetch(MANIFEST) as response:
+        raw = response.read(65537)
+    if len(raw) > 65536:
+        raise ValueError('Update information is too large.')
+    manifest = json.loads(raw)
+    latest = manifest['version']
+    if version_tuple(latest) <= version_tuple(current):
+        return None
+    entry = manifest['downloads'][arch]
+    if not isinstance(entry, dict) or not entry.get('url', '').startswith(BASE):
+        raise ValueError('Invalid update download.')
+    digest = entry.get('sha256', '')
+    if len(digest) != 64 or any(c not in '0123456789abcdef' for c in digest):
+        raise ValueError('Invalid update checksum.')
+    if type(entry.get('bytes')) is not int or not 1 <= entry['bytes'] <= MAX_DOWNLOAD:
+        raise ValueError('Invalid update download size.')
+    return dict(version=latest, architecture=arch, **entry)
+
+
+def bundle_info(app):
+    if app.name != APP_NAME or not app.is_dir():
+        raise ValueError('Not Ronald’s Mac Label Helper app.')
+    info = plistlib.loads((app / 'Contents/Info.plist').read_bytes())
+    if info.get('CFBundleIdentifier') != BUNDLE_ID:
+        raise ValueError('The app has a different identity.')
+    version_tuple(info.get('CFBundleShortVersionString'))
+    return info
+
+
+def unpack(archive, destination):
+    """Extract only this app, preserving modes and contained relative symlinks."""
+    app = destination / APP_NAME
+    links = []
+    with zipfile.ZipFile(archive) as zipped:
+        if sum(i.file_size for i in zipped.infolist()) > MAX_EXPANDED:
+            raise ValueError('Expanded update is too large.')
+        for item in zipped.infolist():
+            parts = item.filename.split('/')
+            if '\\' in item.filename or item.filename.startswith('/') or '..' in parts:
+                raise ValueError('Unsafe path in update archive.')
+            if '__MACOSX' in parts or APP_NAME not in parts:
+                continue
+            parts = parts[parts.index(APP_NAME):]
+            target = destination.joinpath(*parts)
+            mode = item.external_attr >> 16
+            if stat.S_ISLNK(mode):
+                link = zipped.read(item).decode('utf8')
+                normal = posixpath.normpath(posixpath.join('/'.join(parts[:-1]), link))
+                if link.startswith('/') or '\\' in link or not (normal == APP_NAME or normal.startswith(APP_NAME + '/')):
+                    raise ValueError('Unsafe symbolic link in update archive.')
+                links.append((target, link))
+            elif item.is_dir():
+                target.mkdir(parents=True, exist_ok=True)
+            else:
+                target.parent.mkdir(parents=True, exist_ok=True)
+                with target.open('wb') as output:
+                    shutil.copyfileobj(zipped.open(item), output)
+                target.chmod(mode & 0o777 or 0o644)
+        for target, link in links:
+            target.parent.mkdir(parents=True, exist_ok=True)
+            if target.exists() or target.is_symlink():
+                raise ValueError('Conflicting symbolic link in update archive.')
+            target.symlink_to(link)
+    bundle_info(app)
+    return app
+
+
+def prepare(entry):
+    folder = Path(tempfile.mkdtemp(prefix='ronald-helper-update-'))
+    try:
+        archive = folder / 'update.zip'
+        digest, size = hashlib.sha256(), 0
+        with fetch(entry['url']) as response, archive.open('wb') as output:
+            while chunk := response.read(65536):
+                size += len(chunk)
+                if size > entry['bytes'] or size > MAX_DOWNLOAD:
+                    raise ValueError('Update exceeds its expected size.')
+                digest.update(chunk)
+                output.write(chunk)
+        if size != entry['bytes'] or digest.hexdigest() != entry['sha256']:
+            raise ValueError('Update checksum or size did not match. Current app kept.')
+        app = unpack(archive, folder / 'expanded')
+        if bundle_info(app)['CFBundleShortVersionString'] != entry['version']:
+            raise ValueError('Downloaded app version did not match.')
+        subprocess.run(['/usr/bin/codesign','--verify','--deep','--strict',str(app)], check=True, capture_output=True)
+        return app
+    except BaseException:
+        shutil.rmtree(folder, ignore_errors=True)
+        raise
+
+
+def installed_bundle(executable):
+    for parent in Path(executable).resolve().parents:
+        if parent.name == APP_NAME:
+            bundle_info(parent)
+            return parent
+    raise ValueError('Install the app in Applications before using its updater.')
+
+
+def replace(target, staged, launch=None):
+    """Stage alongside the current app; roll back if replacement or launch fails."""
+    target, staged = Path(target), Path(staged)
+    old, new = bundle_info(target), bundle_info(staged)
+    if version_tuple(new['CFBundleShortVersionString']) <= version_tuple(old['CFBundleShortVersionString']):
+        raise ValueError('The downloaded app is not newer.')
+    if not os.access(target.parent, os.W_OK):
+        raise PermissionError('Applications is not writable. Install this update manually.')
+    transaction = Path(tempfile.mkdtemp(prefix='.ronald-helper-update-', dir=target.parent))
+    incoming, backup = transaction / APP_NAME, transaction / 'previous.app'
+    moved = False
+    try:
+        shutil.copytree(staged, incoming, symlinks=True)
+        # Preserve Gatekeeper quarantine metadata; never remove security attributes.
+        if hasattr(os, 'listxattr') and 'com.apple.quarantine' in os.listxattr(target):
+            os.setxattr(incoming, 'com.apple.quarantine', os.getxattr(target, 'com.apple.quarantine'))
+        target.rename(backup)
+        moved = True
+        incoming.rename(target)
+        (launch or (lambda p: subprocess.run(['/usr/bin/open','-n',str(p)], check=True)))(target)
+    except BaseException:
+        if moved:
+            if target.exists():
+                shutil.rmtree(target)
+            backup.rename(target)
+        raise
+    finally:
+        shutil.rmtree(transaction, ignore_errors=True)
+
+
+def apply(plan_path):
+    """Run from the downloaded app after the old process has shut down."""
+    plan = json.loads(Path(plan_path).read_text())
+    target, staged = Path(plan['target']), Path(plan['staged'])
+    if installed_bundle(os.path.realpath(__import__('sys').executable)) != staged.resolve():
+        raise ValueError('Update worker does not match the staged app.')
+    deadline = time.monotonic() + 30
+    while True:
+        try:
+            os.kill(plan['pid'], 0)
+        except ProcessLookupError:
+            break
+        if time.monotonic() >= deadline:
+            raise RuntimeError('The current helper did not close. Its app was kept.')
+        time.sleep(.1)
+    replace(target, staged)
+    shutil.rmtree(staged.parents[1], ignore_errors=True)

@@ -1,3 +1,282 @@
-# Ronald’s Mac Label Helper — packed build input
-import base64,zlib
-exec(compile(zlib.decompress(base64.b64decode('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')),__file__,"exec"))
+"""Self-contained Cocoa application around the existing local printer bridge."""
+import asyncio
+import sys
+import threading
+import traceback
+from pathlib import Path
+
+from aiohttp import web
+import helper
+import updater
+import json
+import os
+import subprocess
+
+
+class Server:
+    def __init__(self, simulate=False):
+        self.printer = helper.Printer(simulate=simulate)
+        self.loop = None
+        self.stop_event = None
+        self.ready = threading.Event()
+        self.error = ''
+    def start(self):
+        threading.Thread(target=self.run, name='Local printer bridge', daemon=True).start()
+    def run(self):
+        try:
+            asyncio.run(self.serve())
+        except Exception as error:
+            self.error = str(error) or type(error).__name__
+            traceback.print_exc()
+            self.ready.set()
+    async def serve(self):
+        self.loop = asyncio.get_running_loop()
+        self.stop_event = asyncio.Event()
+        runner = web.AppRunner(helper.make_app(self.printer))
+        await runner.setup()
+        try:
+            await web.TCPSite(runner, '127.0.0.1', helper.PORT).start()
+            self.ready.set()
+            await self.stop_event.wait()
+        finally:
+            await runner.cleanup()
+    def stop(self):
+        if self.loop and self.stop_event:
+            self.loop.call_soon_threadsafe(self.stop_event.set)
+
+
+async def smoke_test():
+    # Exercise bundled dependencies and protocol, without physical Bluetooth.
+    import AppKit
+    import CoreBluetooth
+    from bleak.backends.corebluetooth.client import BleakClientCoreBluetooth
+    from bleak.backends.corebluetooth.scanner import BleakScannerCoreBluetooth
+    import queue_monitor
+    await queue_monitor.native_smoke_test()
+    p = helper.Printer(simulate=True)
+    await p.connect('simulated-m110')
+    client = p.client
+    p.start_job(dict(widthBytes=1, height=1, density=10, data='gA==', mode='auto'))
+    await p.task
+    assert p.job['state'] == 'sent' and p.job['acknowledged']
+    assert client.writes[4][0] == b'\x80'
+    html = Path(helper.__file__).with_name('helper.html').read_text()
+    assert '__RB_TOKEN__' in html
+    await p.disconnect()
+    print('Bundled Cocoa, CoreBluetooth, bridge assets and acknowledged protocol: PASS')
+
+
+def main():
+    if '--apply-update' in sys.argv:
+        try:
+            updater.apply(sys.argv[sys.argv.index('--apply-update')+1])
+        except Exception as error:
+            from AppKit import NSAlert
+            alert=NSAlert.alloc().init();alert.setMessageText_('Helper update could not be installed');alert.setInformativeText_(str(error)+' Your existing app was kept.');alert.runModal()
+        return
+    if '--smoke-update' in sys.argv:
+        import tempfile, shutil, plistlib
+        current=updater.installed_bundle(sys.executable)
+        with tempfile.TemporaryDirectory() as temp:
+            folder=Path(temp);archive=folder/'update.zip'
+            subprocess.run(['/usr/bin/ditto','-c','-k','--keepParent',str(current),str(archive)],check=True)
+            staged=updater.unpack(archive,folder/'staged')
+            subprocess.run(['/usr/bin/codesign','--verify','--deep','--strict',str(staged)],check=True)
+            target=folder/'Applications'/updater.APP_NAME;target.parent.mkdir();shutil.copytree(current,target,symlinks=True)
+            info=updater.bundle_info(target);info['CFBundleShortVersionString']='0.1.6';(target/'Contents/Info.plist').write_bytes(plistlib.dumps(info))
+            updater.replace(target,staged,launch=lambda app: None)
+            assert updater.bundle_info(target)['CFBundleShortVersionString']==helper.VERSION
+        with updater.fetch(updater.MANIFEST) as response:
+            assert json.loads(response.read(65536))['version']
+        print('Native ZIP extraction, signature, atomic replacement and bundled-CA HTTPS: PASS')
+        return
+    if '--smoke-test' in sys.argv:
+        asyncio.run(smoke_test())
+        return
+    from AppKit import (NSApplication, NSApplicationActivationPolicyRegular, NSWindow,
+        NSWindowStyleMaskTitled, NSWindowStyleMaskClosable, NSWindowStyleMaskMiniaturizable,
+        NSBackingStoreBuffered, NSTextField, NSButton, NSMenu, NSMenuItem, NSAlert,
+        NSWorkspace, NSTerminateCancel, NSTerminateNow)
+    from Foundation import NSObject, NSTimer, NSURL
+    import objc
+    smoke_app = '--smoke-app' in sys.argv
+
+    class Delegate(NSObject):
+        def applicationDidFinishLaunching_(self, notification):
+            self.server = Server(simulate=smoke_app)
+            self.window = NSWindow.alloc().initWithContentRect_styleMask_backing_defer_(
+                ((0, 0), (560, 395)), NSWindowStyleMaskTitled | NSWindowStyleMaskClosable |
+                NSWindowStyleMaskMiniaturizable, NSBackingStoreBuffered, False)
+            self.window.setTitle_('Ronald’s Mac Label Helper')
+            self.window.setReleasedWhenClosed_(False)
+            self.window.center()
+            content = self.window.contentView()
+            intro = NSTextField.wrappingLabelWithString_('Keep this app running while printing from Safari. You can hide this window.\n\nOpen a Glazy recipe and launch Ronald’s Glaze Label Printer. Choose your printer, connect and print inside the label tool. Or use Open Batch Designer below for your standalone labels.\n\nDisconnect the printer from your iPhone first.')
+            intro.setFrame_(((24, 205), (512, 160)))
+            content.addSubview_(intro)
+            self.status = NSTextField.wrappingLabelWithString_('Starting the local printer connection…')
+            self.status.setFrame_(((24, 175), (512, 28)))
+            content.addSubview_(self.status)
+            for title, action, x, width in [('Open Glazy', 'openGlazy:', 24, 125),
+                                          ('Hide app', 'hideApp:', 165, 220),
+                                          ('Quit', 'quit:', 415, 120)]:
+                button = NSButton.alloc().initWithFrame_(((x, 12), (width, 32)))
+                button.setTitle_(title)
+                button.setBezelStyle_(1)
+                button.setTarget_(self)
+                button.setAction_(action)
+                content.addSubview_(button)
+            self.batch_button=NSButton.alloc().initWithFrame_(((24, 135), (240, 32)))
+            self.batch_button.setTitle_('Open Batch Designer');self.batch_button.setBezelStyle_(1);self.batch_button.setTarget_(self);self.batch_button.setAction_('openBatchDesigner:');self.batch_button.setEnabled_(False);content.addSubview_(self.batch_button)
+            self.update_info=NSTextField.wrappingLabelWithString_('Helper v'+helper.VERSION+' · Checking for updates…')
+            self.update_info.setFrame_(((24, 85), (512, 36)));content.addSubview_(self.update_info)
+            self.update_button=NSButton.alloc().initWithFrame_(((24, 45), (240, 32)))
+            self.update_button.setTitle_('Check for updates');self.update_button.setBezelStyle_(1);self.update_button.setTarget_(self);self.update_button.setAction_('updateHelper:');content.addSubview_(self.update_button)
+            self.update_entry=None;self.update_task=None;self.update_result=None;self.installing=False
+            self.window.makeKeyAndOrderFront_(None)
+            NSApplication.sharedApplication().activateIgnoringOtherApps_(True)
+            self.server.start()
+            if not smoke_app:self.checkUpdates()
+            self.timer = NSTimer.scheduledTimerWithTimeInterval_target_selector_userInfo_repeats_(
+                1, self, 'updateStatus:', None, True)
+
+        @objc.python_method
+        def checkUpdates(self):
+            self.update_result=None;self.update_task='checking'
+            def work():
+                try:self.update_result=('checked',updater.check(helper.VERSION))
+                except Exception as e:self.update_result=('error',str(e))
+            threading.Thread(target=work,daemon=True).start()
+
+        def updateHelper_(self, sender):
+            if self.server.printer.busy or self.update_task or self.installing:return
+            if not self.update_entry:
+                self.checkUpdates();return
+            self.update_task='downloading';self.update_result=None
+            entry=self.update_entry
+            def work():
+                try:self.update_result=('prepared',updater.prepare(entry))
+                except Exception as e:self.update_result=('error',str(e))
+            threading.Thread(target=work,daemon=True).start()
+
+        @objc.python_method
+        def installPrepared(self, staged):
+            async def reserve():
+                if self.server.printer.busy:raise RuntimeError('Finish printing before updating.')
+                self.server.printer.maintenance=True
+            asyncio.run_coroutine_threadsafe(reserve(),self.server.loop).result(timeout=5)
+            self.installing=True
+            try:
+                target=updater.installed_bundle(sys.executable)
+                plan=staged.parents[1]/'install-plan.json'
+                plan.write_text(json.dumps(dict(target=str(target),staged=str(staged),pid=os.getpid())))
+                plan.chmod(0o600)
+                worker=staged/'Contents/MacOS/Ronalds Mac Label Helper'
+                subprocess.Popen([str(worker),'--apply-update',str(plan)],start_new_session=True)
+                NSApplication.sharedApplication().terminate_(None)
+            except Exception:
+                self.installing=False;self.server.printer.maintenance=False
+                raise
+
+        @objc.python_method
+        def openSafari(self, url):
+            workspace = NSWorkspace.sharedWorkspace()
+            safari = workspace.URLForApplicationWithBundleIdentifier_('com.apple.Safari')
+            if safari:
+                workspace.openURLs_withApplicationAtURL_options_configuration_error_(
+                    [NSURL.URLWithString_(url)], safari, 0, {}, None)
+            else:
+                workspace.openURL_(NSURL.URLWithString_(url))
+
+        def openGlazy_(self, sender):
+            self.openSafari('https://glazy.org/')
+
+        def openBatchDesigner_(self, sender):
+            if self.server.ready.is_set() and not self.server.error:
+                self.openSafari(f'http://127.0.0.1:{helper.PORT}/batch-designer')
+
+        def hideApp_(self, sender):
+            NSApplication.sharedApplication().hide_(sender)
+
+        def updateStatus_(self, timer):
+            if self.server.error:
+                message = 'Could not start: ' + self.server.error
+                if 'Address already in use' in self.server.error:
+                    message = 'Another helper is already running. Quit it before opening this app.'
+            elif not self.server.ready.is_set():
+                message = 'Starting…'
+            elif self.server.printer.busy:
+                message = 'Sending a label. Please leave the app open.'
+            elif self.server.printer.status()['connected']:
+                message = 'Connected to ' + self.server.printer.name
+            else:
+                message = 'Ready. Open Batch Designer or connect in the Glazy label tool.'
+            self.status.setStringValue_(message)
+            self.batch_button.setEnabled_(self.server.ready.is_set() and not self.server.error and not self.installing)
+            if self.update_result:
+                kind,value=self.update_result;self.update_result=None;self.update_task=None
+                if kind=='checked':
+                    self.update_entry=value
+                    self.update_info.setStringValue_('Update v'+value['version']+' available.' if value else 'Helper v'+helper.VERSION+' · Up to date')
+                elif kind=='prepared':
+                    if self.server.printer.busy:
+                        self.update_info.setStringValue_('Finish printing, then press Update and restart again.')
+                    else:
+                        try:self.installPrepared(value)
+                        except Exception as e:self.update_info.setStringValue_('Update kept the current app: '+str(e))
+                else:self.update_info.setStringValue_('Could not check or download update: '+str(value))
+            self.update_button.setTitle_('Downloading update…' if self.update_task=='downloading' else 'Checking…' if self.update_task=='checking' else 'Update and restart' if self.update_entry else 'Check for updates')
+            self.update_button.setEnabled_(not self.server.printer.busy and not self.update_task and not self.installing)
+
+            if smoke_app and self.server.ready.is_set():
+                assert self.batch_button.isEnabled()
+                assert self.batch_button.title() == 'Open Batch Designer'
+                assert self.window.title() == 'Ronald’s Mac Label Helper'
+                self.window.close()
+                self.window.makeKeyAndOrderFront_(None)
+                assert self.window.isVisible()
+                self.server.stop()
+                NSApplication.sharedApplication().stop_(None)
+
+        def quit_(self, sender):
+            NSApplication.sharedApplication().terminate_(sender)
+
+        def applicationShouldTerminate_(self, sender):
+            if self.server.printer.busy:
+                alert = NSAlert.alloc().init()
+                alert.setMessageText_('A label is still sending')
+                alert.setInformativeText_('Wait for this label to finish sending before quitting.')
+                alert.runModal()
+                self.window.makeKeyAndOrderFront_(None)
+                return NSTerminateCancel
+            self.server.stop()
+            return NSTerminateNow
+
+        def applicationShouldTerminateAfterLastWindowClosed_(self, sender):
+            return False
+
+        def applicationShouldHandleReopen_hasVisibleWindows_(self, sender, visible):
+            self.window.makeKeyAndOrderFront_(None)
+            return True
+
+    app = NSApplication.sharedApplication()
+    app.setActivationPolicy_(NSApplicationActivationPolicyRegular)
+    menu = NSMenu.alloc().init()
+    item = NSMenuItem.alloc().init()
+    menu.addItem_(item)
+    submenu = NSMenu.alloc().init()
+    submenu.addItemWithTitle_action_keyEquivalent_('Quit Ronald’s Mac Label Helper', 'terminate:', 'q')
+    item.setSubmenu_(submenu)
+    app.setMainMenu_(menu)
+    delegate = Delegate.alloc().init()
+    app.setDelegate_(delegate)
+    app.run()
+    if smoke_app:
+        if delegate.server.error:
+            raise RuntimeError(delegate.server.error)
+        print('Packaged Cocoa window startup, close/reopen and local server: PASS')
+
+
+if __name__ == '__main__':
+    main()
+

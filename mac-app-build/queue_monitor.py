@@ -1,3 +1,50 @@
-# Ronald’s Mac Label Helper — packed build input
-import base64,zlib
-exec(compile(zlib.decompress(base64.b64decode('eJzFVU2P0zAQvedXWOWwiVRZ9FoJCQGLxAF2KYg9Wo4zaUxdT2Q7u9t/zzjfabugPWGpquL5fvPyslqt7nIP7hFYra2Fgn0wIA83njW28fRoZdBkdCCLE1PSmFyqA3vSocIm0HVtpNJ2z3TwzOBeK75arRJ9rNEFJv3JKo3D4xNldlAmiSjAwF4GEMpI79k79g0tJElSQMmWtjTbJozO3mAuDTuLbE26PL9m2rcZu9B4SodHlsfReBwAbOG5Qge5aSAghorfg9N1BU6aT30u1rd9l/9Wl9a/phZN0MYPCeA5gLPSiFBFHMUAYzLm6LreITkVXzebt98baGColF5vIJumi+f9i1XmXhHgekz1xe/iXn/iD+r6wekAD91id+BrtB5E6sGU61nIWdV4ogt3uWg5MpZNs2m8y32/MGob4SA0zl6sumOHDEGqKu2RXo+U7PuqT2MYVem9+HjX+Th41NjENmbuHAnlpSN2b4Yjx3NSciqLiv611SGCdn8aZhBpz3NOv3RWIcsWWS8hozqLpQV3mtAeZ5l2wT2EqeqQt6sCzwrqwG7bP432FYkGfLIxxEnt4RzfJWDU+9BA6/iG7SBIbVlOLxcLFTCpWiUZQZW2YOj0XhMTRnxZiY686f1VSHKkYut8zoohfD2ukYjR6kzL7U6uhD/iAUQAHwb96Ih3fyJ622HUCZN60JIlf5buaQeIB7Bk67WN3z6CDb3JINYz0x6CcI21pI8imtLsf9HKyGNeyG3bII/3wiPaXim8LCGNU0UadMmoGSDhGnPOyqVZVNfZxdUA1wpI4aO0GFojOpHevEJ4tjfXG/lH3m2hu3S/JAn7Z3QfK+mIeOTgg1ZbcA7dkHua7jWCGL8rfW9PUo/fOB4fBLG3QzI+pdmabbLkD9jGh60=')),__file__,"exec"))
+"""Observe pinned Bleak's unused native ready callback without replacing its logic."""
+import asyncio
+import weakref
+
+_delegate_class = None
+
+
+def delegate_class():
+    global _delegate_class
+    if _delegate_class is None:
+        from bleak.backends.corebluetooth.PeripheralDelegate import ObjcPeripheralDelegate
+        from bleak.backends._utils import external_thread_callback
+
+        class RonaldM110QueueDelegate(ObjcPeripheralDelegate):
+            @external_thread_callback
+            def peripheralIsReadyToSendWriteWithoutResponse_(self, peripheral):
+                self.rb_ready_callback()
+
+        _delegate_class = RonaldM110QueueDelegate
+    return _delegate_class
+
+
+def attach(backend, callback):
+    py_delegate = backend._delegate
+    previous = py_delegate.objc_delegate
+    observer = delegate_class().alloc().initWithPyDelegate_(weakref.ref(py_delegate))
+    observer.rb_ready_callback = callback
+    try:
+        backend._peripheral.setDelegate_(observer)
+    except Exception:
+        backend._peripheral.setDelegate_(previous)
+        raise
+    py_delegate.objc_delegate = observer
+    # Retain both the active observer and original delegate for this connection.
+    return observer, previous
+
+
+async def native_smoke_test():
+    class PythonDelegate:
+        pass
+    py_delegate = PythonDelegate()
+    seen = asyncio.Event()
+    loop = asyncio.get_running_loop()
+    observer = delegate_class().alloc().initWithPyDelegate_(weakref.ref(py_delegate))
+    observer.rb_ready_callback = lambda: loop.call_soon_threadsafe(seen.set)
+    assert observer.py_delegate() is py_delegate
+    assert observer.respondsToSelector_('peripheralIsReadyToSendWriteWithoutResponse:')
+    assert observer.respondsToSelector_('peripheral:didWriteValueForCharacteristic:error:')
+    observer.peripheralIsReadyToSendWriteWithoutResponse_(None)
+    await asyncio.wait_for(seen.wait(), 1)
