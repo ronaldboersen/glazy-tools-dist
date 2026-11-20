@@ -1,1 +1,1 @@
-window.RB_GLAZY_GLAZE_GUESSTIMATOR_MANIFEST={"version":"0.1.31","script":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-glaze-guesstimator-v0.1.31.js","style":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-glaze-guesstimator-v0.1.31.css"};
+window.RB_GLAZY_GLAZE_GUESSTIMATOR_MANIFEST={"version":"0.1.32","script":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-glaze-guesstimator-v0.1.32.js","style":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-glaze-guesstimator-v0.1.32.css"};
