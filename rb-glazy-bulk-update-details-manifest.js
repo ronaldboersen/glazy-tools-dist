@@ -1,1 +1,1 @@
-window.RB_GLAZY_BULK_UPDATE_DETAILS_MANIFEST={"version":"1.1.28","script":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-bulk-update-details-v1.1.28.js","style":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-bulk-update-details-v1.1.28.css"};
+window.RB_GLAZY_BULK_UPDATE_DETAILS_MANIFEST={"version":"1.1.29","script":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-bulk-update-details-v1.1.29.js","style":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-bulk-update-details-v1.1.29.css"};
