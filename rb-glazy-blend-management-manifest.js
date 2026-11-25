@@ -1,1 +1,1 @@
-window.RB_GLAZY_BLEND_MANAGEMENT_MANIFEST={"version":"1.0.15","script":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-blend-management-v1.0.15.js","style":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-blend-management-v1.0.15.css"};
+window.RB_GLAZY_BLEND_MANAGEMENT_MANIFEST={"version":"1.0.16","script":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-blend-management-v1.0.16.js","style":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-blend-management-v1.0.16.css"};
