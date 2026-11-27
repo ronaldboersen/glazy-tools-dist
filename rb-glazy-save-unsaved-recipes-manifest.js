@@ -1,1 +1,1 @@
-window.RB_GLAZY_SAVE_UNSAVED_RECIPES_MANIFEST={"version":"1.0.14","script":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-save-unsaved-recipes-v1.0.14.js","style":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-save-unsaved-recipes-v1.0.14.css"};
+window.RB_GLAZY_SAVE_UNSAVED_RECIPES_MANIFEST={"version":"1.0.15","script":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-save-unsaved-recipes-v1.0.15.js","style":"https://ronaldboersen.github.io/glazy-tools-dist/rb-glazy-save-unsaved-recipes-v1.0.15.css"};
